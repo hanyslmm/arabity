@@ -149,6 +149,70 @@ class Story(Base):
     center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
     center_reg = relationship(CenterReg)
 
+
+# Verification class definition code
+class Social(Base):
+    __tablename__ = 'social'
+
+# verification table mapper
+    id = Column(Integer, primary_key=True)
+    social = Column(String(20), nullable=False)
+
+
+# SocialLink class definition code
+class SocialLink(Base):
+    __tablename__ = 'social_link'
+
+# social_link table mapper
+    id = Column(Integer, primary_key = True)
+    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
+    center_reg = relationship(CenterReg)
+    social_id = Column(Integer, ForeignKey('social.id'), nullable=False)
+    social = relationship(Social)
+
+
+# Verification class definition code
+class Tag(Base):
+    __tablename__ = 'tag'
+
+# verification table mapper
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+
+
+# Tag class definition code
+class ProviderTag(Base):
+    __tablename__ = 'provider_tag'
+
+# social_link table mapper
+    id = Column(Integer, primary_key = True)
+    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
+    center_reg = relationship(CenterReg)
+    tag_id = Column(Integer, ForeignKey('tag.id'), nullable=False)
+    tag = relationship(Tag)
+
+
+# Extra class definition code
+class Extra(Base):
+    __tablename__ = 'extra'
+
+# extra table mapper
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+
+
+# ProviderExtra class definition code
+class ProviderExtra(Base):
+    __tablename__ = 'provider_extra'
+
+# provider_extra table mapper
+    id = Column(Integer, primary_key = True)
+    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
+    center_reg = relationship(CenterReg)
+    extra_id = Column(Integer, ForeignKey('extra.id'), nullable=False)
+    extra = relationship(Extra)
+
+
 # === to connect to an existing db or create a new one ===
 engine = create_engine('sqlite:///arabity.db')
 Base.metadata.create_all(engine)
