@@ -1,8 +1,9 @@
 # used to manipulate diff parts of py run-time env.
 import sys
+import datetime
 import os
 # import all modules needed for configuration
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
@@ -10,78 +11,98 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-# add class definition code
-class CenterReg(Base):
-    __tablename__ = 'center_reg'
+# add usertype class definition code for usertype table
+class UserType(Base):
+    __tablename__ = 'usertype'
 
-# center_reg table mapper
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+
+
+# add class definition code and mapper for user table
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
+    user_type = Column(Integer, ForeignKey('usertype.id'), nullable=False)
+    usertype = relationship(UserType)
+
+
+# ProviderReg class definition code
+class ProviderReg(Base):
+    __tablename__ = 'provider_reg'
+
+# provider_reg table mapper
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
     logo = Column(String(250), nullable=False)
 
 
-# Addresses class definition code
-class Addresses(Base):
-    __tablename__ = 'addresses'
+# Address class definition code
+class Address(Base):
+    __tablename__ = 'address'
 
-# addresses table mapper
+# address table mapper
     id = Column(Integer, primary_key=True)
-    address = Column(String(250), nullable=False)
+    address = Column(String(80), nullable=False)
     parent_id = Column(Integer, nullable=False)
 
 
-# CenterAdd class definition code
-class CenterAdd(Base):
-    __tablename__ = 'center_add'
+# ProviderAdd class definition code
+class ProviderAdd(Base):
+    __tablename__ = 'provider_add'
 
-# center_add table mapper
+# provider_add table mapper
     id = Column(Integer, primary_key=True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
-    address_id = Column(Integer, ForeignKey('addresses.id'), nullable=False)
-    addresses = relationship(Addresses)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
+    address_id = Column(Integer, ForeignKey('address.id'), nullable=False)
+    address = relationship(Address)
 
 
-# Telephones class definition code
-class Telephones(Base):
-    __tablename__ = 'telephones'
+# Telephone class definition code
+class Telephone(Base):
+    __tablename__ = 'telephone'
 
-# telephones table mapper
+# telephone table mapper
     id = Column(Integer, primary_key=True)
-    tel = Column(String(250), nullable=False)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    tel = Column(String(20), nullable=False)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
 
 
-# Mobiles class definition code
-class Mobiles(Base):
-    __tablename__ = 'telephones'
+# Mobile class definition code
+class Mobile(Base):
+    __tablename__ = 'mobile'
 
-# mobiles table mapper
+# mobile table mapper
     id = Column(Integer, primary_key=True)
-    mob = Column(String(250), nullable=False)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    mob = Column(String(20), nullable=False)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
 
 
-# Locations class definition code
-class Locations(Base):
-    __tablename__ = 'locations'
+# Location class definition code
+class Location(Base):
+    __tablename__ = 'location'
 
-# locations table mapper
+# location table mapper
     id = Column(Integer, primary_key=True)
     loc = Column(String(250), nullable=False)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
 
 
-# Brands class definition code
-class Brands(Base):
-    __tablename__ = 'brands'
+# Brand class definition code
+class Brand(Base):
+    __tablename__ = 'brand'
 
-# brands table mapper
+# brand table mapper
     id = Column(Integer, primary_key=True)
-    brands = Column(String(20), nullable=False)
+    brand = Column(String(20), nullable=False)
     parent_id = Column(Integer, nullable=False)
 
 
@@ -91,19 +112,19 @@ class ProviderBrand(Base):
 
 # provider_brand table mapper
     id = Column(Integer, primary_key=True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
-    brands_id = Column(Integer, ForeignKey('brands.id'), nullable=False)
-    brands = relationship(Brands)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
+    brand_id = Column(Integer, ForeignKey('brand.id'), nullable=False)
+    brand = relationship(Brand)
 
 
-# Services class definition code
-class Services(Base):
-    __tablename__ = 'services'
+# Service class definition code
+class Service(Base):
+    __tablename__ = 'service'
 
-# services table mapper
+# service table mapper
     id = Column(Integer, primary_key=True)
-    services = Column(String(20), nullable=False)
+    name = Column(String(20), nullable=False)
 
 
 # ProviderService class definition code
@@ -112,10 +133,11 @@ class ProviderService(Base):
 
 # provider_service table mapper
     id = Column(Integer, primary_key = True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
-    services_id = Column(Integer, ForeignKey('services.id'), nullable=False)
-    services = relationship(Services)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
+    service_id = Column(Integer, ForeignKey('service.id'), nullable=False)
+    service = relationship(Service)
+
 
 # Verification class definition code
 class Verification(Base):
@@ -123,7 +145,7 @@ class Verification(Base):
 
 # verification table mapper
     id = Column(Integer, primary_key=True)
-    services = Column(String(20), nullable=False)
+    verify = Column(String(20), nullable=False)
 
 
 # ProviderVerification class definition code
@@ -132,8 +154,8 @@ class ProviderVerification(Base):
 
 # provider_verification table mapper
     id = Column(Integer, primary_key = True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
     verification_id = Column(Integer, ForeignKey('verification.id'),
                              nullable=False)
     verification = relationship(Verification)
@@ -146,17 +168,19 @@ class Story(Base):
 # story table mapper
     id = Column(Integer, primary_key = True)
     storyby = Column(String(250), nullable=False)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
 
 
-# Verification class definition code
-class Social(Base):
-    __tablename__ = 'social'
+# SocialType class definition code
+class SocialType(Base):
+    __tablename__ = 'socialtype'
 
-# verification table mapper
+# socialtype table mapper
     id = Column(Integer, primary_key=True)
-    social = Column(String(20), nullable=False)
+    type = Column(String(20), nullable=False)
+    logo = Column(String(250), nullable=False)
 
 
 # SocialLink class definition code
@@ -165,29 +189,30 @@ class SocialLink(Base):
 
 # social_link table mapper
     id = Column(Integer, primary_key = True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
-    social_id = Column(Integer, ForeignKey('social.id'), nullable=False)
-    social = relationship(Social)
+    link = Column(String(250), nullable=False)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
+    socialtype_id = Column(Integer, ForeignKey('socialtype.id'), nullable=False)
+    socialtype = relationship(SocialType)
 
 
-# Verification class definition code
+# Tag class definition code
 class Tag(Base):
     __tablename__ = 'tag'
 
-# verification table mapper
+# tag table mapper
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False)
 
 
-# Tag class definition code
+# ProviderTag class definition code
 class ProviderTag(Base):
     __tablename__ = 'provider_tag'
 
-# social_link table mapper
+# provider_teg table mapper
     id = Column(Integer, primary_key = True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
     tag_id = Column(Integer, ForeignKey('tag.id'), nullable=False)
     tag = relationship(Tag)
 
@@ -207,8 +232,8 @@ class ProviderExtra(Base):
 
 # provider_extra table mapper
     id = Column(Integer, primary_key = True)
-    center_id = Column(Integer, ForeignKey('center_reg.id'), nullable=False)
-    center_reg = relationship(CenterReg)
+    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
+    provider_reg = relationship(ProviderReg)
     extra_id = Column(Integer, ForeignKey('extra.id'), nullable=False)
     extra = relationship(Extra)
 
@@ -217,3 +242,13 @@ class ProviderExtra(Base):
 engine = create_engine('sqlite:///arabity.db')
 Base.metadata.create_all(engine)
 print("connected to arabity database")
+
+if __name__ == '__main__':
+    # fill usertype table with Admin and Normal
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    normal = UserType(name='Normal')
+    session.add(normal)
+    admin = UserType(name='Admin')
+    session.add(admin)
+    session.commit()
