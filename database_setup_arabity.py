@@ -31,14 +31,16 @@ class User(Base):
     usertype = relationship(UserType)
 
 
-# ProviderReg class definition code
-class ProviderReg(Base):
-    __tablename__ = 'provider_reg'
+# Provider class definition code
+class Provider(Base):
+    __tablename__ = 'provider'
 
-# provider_reg table mapper
+# provider table mapper
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False)
     logo = Column(String(250), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user = relationship(User)
 
 
 # Address class definition code
@@ -57,8 +59,8 @@ class ProviderAdd(Base):
 
 # provider_add table mapper
     id = Column(Integer, primary_key=True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     address_id = Column(Integer, ForeignKey('address.id'), nullable=False)
     address = relationship(Address)
 
@@ -70,8 +72,8 @@ class Telephone(Base):
 # telephone table mapper
     id = Column(Integer, primary_key=True)
     tel = Column(String(20), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
 
 
 # Mobile class definition code
@@ -81,8 +83,8 @@ class Mobile(Base):
 # mobile table mapper
     id = Column(Integer, primary_key=True)
     mob = Column(String(20), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
 
 
 # Location class definition code
@@ -92,8 +94,8 @@ class Location(Base):
 # location table mapper
     id = Column(Integer, primary_key=True)
     loc = Column(String(250), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
 
 
 # Brand class definition code
@@ -112,8 +114,8 @@ class ProviderBrand(Base):
 
 # provider_brand table mapper
     id = Column(Integer, primary_key=True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     brand_id = Column(Integer, ForeignKey('brand.id'), nullable=False)
     brand = relationship(Brand)
 
@@ -133,8 +135,8 @@ class ProviderService(Base):
 
 # provider_service table mapper
     id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     service_id = Column(Integer, ForeignKey('service.id'), nullable=False)
     service = relationship(Service)
 
@@ -154,8 +156,8 @@ class ProviderVerification(Base):
 
 # provider_verification table mapper
     id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     verification_id = Column(Integer, ForeignKey('verification.id'),
                              nullable=False)
     verification = relationship(Verification)
@@ -169,8 +171,8 @@ class Story(Base):
     id = Column(Integer, primary_key = True)
     storyby = Column(String(250), nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
 
 
 # SocialType class definition code
@@ -190,8 +192,8 @@ class SocialLink(Base):
 # social_link table mapper
     id = Column(Integer, primary_key = True)
     link = Column(String(250), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     socialtype_id = Column(Integer, ForeignKey('socialtype.id'), nullable=False)
     socialtype = relationship(SocialType)
 
@@ -211,8 +213,8 @@ class ProviderTag(Base):
 
 # provider_teg table mapper
     id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     tag_id = Column(Integer, ForeignKey('tag.id'), nullable=False)
     tag = relationship(Tag)
 
@@ -232,8 +234,8 @@ class ProviderExtra(Base):
 
 # provider_extra table mapper
     id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider_reg.id'), nullable=False)
-    provider_reg = relationship(ProviderReg)
+    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
+    provider = relationship(Provider)
     extra_id = Column(Integer, ForeignKey('extra.id'), nullable=False)
     extra = relationship(Extra)
 
