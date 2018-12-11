@@ -17,7 +17,7 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH5R0y5qayuiElPD73gzkTivCHLx7oDWrYgsQz6QgFg3GkY_We" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="http://localhost:5000/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
 					<h1>Provider Service Application</h1>
@@ -42,9 +42,6 @@
 
 			<div class="row">
 				<div class="col-md-6 btn-group text-center" role="group">
-					<button type="button" class="btn btn-secondary pull-left">
-						<a href='{{url_for('newServiceItem',provider_id = provider.id)}}'>Add new Service Item</a>
-					</button>
 
 				</div>
 				<div class="col-md-3 btn-group text-center" role="group">
@@ -67,37 +64,14 @@
 	</nav>
 
 
-
-
-
-  <div class="container container-fluid responsive">
-    <div>
-      <h2>{{ provider.name }} Provider</h2>
-    </div>
-    {% for i in items %}
-    <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
-      <div class="">
-
+    <div class="container container-fluid responsive">
+      <div>
+        <h2>{{provider.name}} Provider</h2>
       </div>
-      <h3>{{i.name}}</h3>
-      <p>{{i.course}}</p>
-      <p>{{i.description}}</p>
-      <p>{{i.price}}</p>
-      </br>
-      </br>
       <p><strong>Added by: {{creator.name}}</strong></p>
       <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
         </br>
-        </br>
-  				<button type="button" class="btn btn-xs pull-left">
-            <a href='{{url_for('editServiceItem', provider_id = provider.id, service_id = i.id) }}'>Edit</a>
-  				</button>
-  				<button type="button" class="btn btn-xs pull-left">
-            <a href = '{{url_for('deleteServiceItem', provider_id = provider.id, service_id = i.id ) }}'>Delete</a>
-  				</button>
-  				</br>
   		</div>
-  	  {% endfor %}
     </br>
     </br>
       <div class="row" style="padding: 20px; border: 3px solid #ccc">
