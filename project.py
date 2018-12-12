@@ -225,7 +225,7 @@ def providerName():
         return render_template('main.html', provider=provider)
 
 
-# delete provider
+# 2 delete provider
 @app.route('/provider/<int:provider_id>/delete', methods=['GET', 'POST'])
 def providerDelete(provider_id):
     deletedProvider = session.query(Provider).filter_by(id=provider_id).one()
@@ -248,7 +248,7 @@ def providerDelete(provider_id):
                                provider=deletedProvider)
 
 
-# 1: create new provider
+# 3: create new provider
 @app.route('/provider/new/', methods=['GET', 'POST'])
 def newProvider():
     # verify that a user is logged in
@@ -262,22 +262,23 @@ def newProvider():
         return redirect(url_for('providerName'))
     else:
         return render_template('newprovider.html')
-# 3: list service items in provider using its id
+
+
+# 4: list service items in provider using its id
 @app.route('/provider/<int:provider_id>/service')
 @app.route('/provider/<int:provider_id>/')
 def providerService(provider_id):
-    provider = session.query(provider).filter_by(id=provider_id).one()
+    provider = session.query(Provider).filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
-    items = session.query(ServiceItem).filter_by(provider_id=provider.id)
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
-                               items=items, creator=creator)
+                                creator=creator)
     else:
         return render_template('service.html', provider=provider,
-                               items=items, creator=creator)
+                                creator=creator)
 
 
-# 4: Create route for newServiceItem Function
+# 5: Create route for newServiceItem Function
 @app.route('/provider/<int:provider_id>/new/', methods=['GET', 'POST'])
 def newServiceItem(provider_id):
     # verify that a user is logged in
@@ -306,7 +307,7 @@ def newServiceItem(provider_id):
                                provider=provider)
 
 
-# 5: Create route for editServiceItem function
+# 6: Create route for editServiceItem function
 @app.route('/provider/<int:provider_id>/<int:service_id>/edit',
            methods=['GET', 'POST'])
 def editServiceItem(provider_id, service_id):
@@ -337,7 +338,7 @@ def editServiceItem(provider_id, service_id):
             service_id=service_id, item=editedItem)
 
 
-# 6: Create a route for deleteServiceItem function
+# 7: Create a route for deleteServiceItem function
 @app.route('/provider/<int:provider_id>/<int:service_id>/delete/',
            methods=['GET', 'POST'])
 def deleteServiceItem(provider_id, service_id):
