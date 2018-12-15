@@ -8,6 +8,8 @@ import string
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from database_setup_arabity import Base, User, Provider
+from database_setup_arabity import UserType, Story
+from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
 # google OAuth
 from oauth2client.client import flow_from_clientsecrets  # creates flow object
 from oauth2client.client import FlowExchangeError
@@ -20,7 +22,7 @@ import requests  # to use args.get function
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "provider Service App"
+APPLICATION_NAME = "arabity"
 
 # initializes an app variable, using the __name__ attribute
 app = Flask(__name__)
@@ -269,13 +271,19 @@ def newProvider():
 @app.route('/provider/<int:provider_id>/')
 def providerService(provider_id):
     provider = session.query(Provider).filter_by(id=provider_id).one()
+    mobile = session.query(Mobile).filter_by(provider_id=provider.id)
+    telephone = session.query(Telephone).filter_by(provider_id=provider.id)
+    story = session.query(Story).filter_by(provider_id=provider.id)
     creator = getUserInfo(provider.user_id)
+
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
-                                creator=creator)
+                                mobile=mobile,telephone=telephone,
+                                story=story, creator=creator)
     else:
         return render_template('service.html', provider=provider,
-                                creator=creator)
+                                mobile=mobile,telephone=telephone,
+                                story=story, creator=creator)
 
 
 # 5: Create route for newServiceItem Function

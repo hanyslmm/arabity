@@ -173,7 +173,8 @@ class Story(Base):
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
     provider = relationship(Provider)
-
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user = relationship(User)
 
 # SocialType class definition code
 class SocialType(Base):
