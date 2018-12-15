@@ -20,8 +20,9 @@
 					<img src="http://localhost:5000/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
-					<h1>Provider Service Application</h1>
-					<p> Create your own service and keep it updated </p>
+          <h1>Arabity</h1>
+					<h3>Car Service Provider Application</h3>
+					<p>Repairing What Your Husband Fixed.</p>
 					<p>
 						<!--  message flashing -->
 						{% with messages = get_flashed_messages() %}
@@ -68,19 +69,46 @@
       <div>
         <h2>{{provider.name}} Provider</h2>
       </div>
-      <p><strong>Added by: {{creator.name}}</strong></p>
+      <h3>mobile num:</h3>
+      {% for i in mobile %}
+      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+        <p>{{i.mob}}</p>
+      </div>
+      {% endfor %}
+        </br>
+        </br>
+      <h3>telephone num:</h3>
+      {% for i in telephone %}
+      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+        <p>{{i.tel}}</p>
+      </div>
+      {% endfor %}
+        </br>
+        </br>
+      <h3>visitors story:</h3>
+      {% for i in story %}
+      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+        <p>{{i.storyby}}</p>
+        <p><strong>Added by: {{i.user_id}}</strong></p>
+          </br>
+      </div>
+      {% endfor %}
+    </br>
+    </br>
+      <p><strong>Provider Added by: {{creator.name}}</strong></p>
       <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
         </br>
   		</div>
     </br>
     </br>
-      <div class="row" style="padding: 20px; border: 3px solid #ccc">
-        <blockquote>
-          <footer>Made by: Hany Salama</footer>
-          <h5>You might think you’re not good enough, but you’ll surprise yourself if you keep trying.
-             Your past does not determine who you are, your past prepares you for who you are capable of becoming.</h5>
-        </blockquote>
-      </div>
+    <div class="row" style="padding: 20px; border: 3px solid #ccc">
+      <blockquote>
+        <footer>Made by: Arabity</footer>
+        <h4>Keeping You And Your Family Safe.</h4>
+        <h5>Millions of people own cars, and they will inevitably need repairs or maintenance at some point in time. This type of company gives you great return ccustomers as well as a good rate of new customers.
+              A good slogan for you car service business is a great key to success.</h5>
+      </blockquote>
+    </div>
     </br>
   	</div>
 
