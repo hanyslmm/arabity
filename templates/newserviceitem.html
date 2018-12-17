@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>New Item</title>
+  <title>Main</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -17,11 +17,12 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH5R0y5qayuiElPD73gzkTivCHLx7oDWrYgsQz6QgFg3GkY_We" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
-					<h1>Restaurant Menu Application</h1>
-					<p> Create your own menu and keep it updated </p>
+          <h1>Arabity</h1>
+					<h3>Car Service Provider Application</h3>
+					<p> Repairing What Your Husband Fixed.</p>
 					<p>
 						<!--  message flashing -->
 						{% with messages = get_flashed_messages() %}
@@ -41,15 +42,15 @@
 				</div>
 
 			<div class="row">
-				<div class="col-md-6 btn-group text-center" role="group">
+        <div class="col-md-6 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
-						<a href= '{{url_for('restaurantMenu', restaurant_id= restaurant_id)}}'>Cancel</a>
+						<a href= '{{url_for('providerService', provider_id= provider_id)}}'>Cancel</a>
 					</button>
 
 				</div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
-						<a href='{{url_for('restaurantName')}}'>Main Page</a>
+						<a href='{{url_for('providerName')}}'>Main Page</a>
 					</button>
 
 				</div>
@@ -68,27 +69,18 @@
 
     	<div class="container container-fluid responsive">
 
-					<h2> Add New Menu Item to {{restaurant.name}}  </h2>
+					<h2> Add New Data to {{provider.name}}  </h2>
 
-					<form action="{{url_for('newMenuItem',restaurant_id=restaurant_id)}}" method = 'POST'>
-
-
-						<p>Name:</p>
-						  <input type = 'text' size='30' name = 'name' placeholder = 'item name' required>
-            <p>Course:</p>
-						  <input type ='text' size='60' name='course' placeholder = 'item course' required>
-						<p>Description:</p>
-						  <input type ='text' size='60' name='description' placeholder = 'item description' required>
-						<p>Price:</p>
-						  <input type ='text' size='30' name='price' placeholder = 'item price' required>
-						</br>
+					<form action="{{url_for('newService',provider_id=provider_id)}}" method = 'POST'>
+						<p>Mobile number:</p>
+						  <input type = 'Integer' size='30' name = 'mobile' placeholder = 'new mobile' required>
+            <p>Telephone number:</p>
+						  <input type ='Integer' size='60' name='telephone' placeholder = 'new telephone' required>
 						</br>
 						<button type="button" class="btn btn-secondary pull-left">
 						<input type='submit' value='Create'>
 						</button>
 					</form>
-
-
 			</div>
 </body>
 </html>

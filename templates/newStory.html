@@ -17,7 +17,7 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
           <h1>Arabity</h1>
@@ -42,7 +42,10 @@
 				</div>
 
 			<div class="row">
-				<div class="col-md-6 btn-group text-center" role="group">
+        <div class="col-md-6 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-left">
+						<a href= '{{url_for('providerService', provider_id= provider_id)}}'>Cancel</a>
+					</button>
 
 				</div>
 				<div class="col-md-3 btn-group text-center" role="group">
@@ -64,20 +67,17 @@
 
 	</nav>
 
-	  	<div class="container container-fluid responsive">
-			<h1> New Provider </h1>
-			<form action="{{url_for('newProvider')}}" method = 'POST'>
-			<p>Name:</p>
-			<input type='text' size='30' name='name' placeholder="enter new Provider name" required>
-      </br>
-      </br>
-      <p>logo link:</p>
-      <input type='text' size='50' name='logo' placeholder="enter new Provider logo link" required>
-      </br>
-      </br>
-      <input type='submit' value='Create'>
+    	<div class="container container-fluid responsive">
 
-			</form>
+					<h2> Add New Story to {{provider.name}}  </h2>
+
+					<form action="{{url_for('newStory',provider_id=provider_id)}}" method = 'POST'>
+						<p>share your experince:</p>
+						  <input type = 'paragraph' size='100' name = 'post' placeholder = 'عملو معاك ايه ؟' required>
+						<button type="button" class="btn btn-secondary pull-left">
+						<input type='submit' value='Create'>
+						</button>
+					</form>
 			</div>
 </body>
 </html>

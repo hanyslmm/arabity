@@ -54,7 +54,7 @@
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-right">
 						{% if 'username' not in session %}
-						<a  href="{{url_for('showLogin')}}">Click Here to hablo</a>
+						<a  href="{{url_for('showLogin')}}">Click Here to login</a>
 						{% else %}
 						<a  href="{{url_for('gdisconnect')}}">Disconnect</a>
 						{% endif %}
@@ -88,7 +88,8 @@
       <h3>visitors story:</h3>
       {% for i in story %}
       <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
-        <p>{{i.storyby}}</p>
+        <p>{{i.post}}</p>
+        <p>Added at: {{i.timestamp}}</p>
         <p><strong>Added by: {{i.user_id}}</strong></p>
           </br>
       </div>

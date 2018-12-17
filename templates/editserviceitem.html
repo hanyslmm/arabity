@@ -17,7 +17,7 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
           <h1>Arabity</h1>
@@ -68,27 +68,29 @@
 	</nav>
 
     	<div class="container container-fluid responsive">
-
-					<h2> Edit {{item.name}} Item </h2>
-
-					<form action="{{url_for('editServiceItem',provider_id=provider_id, service_id=item.id )}}" method = 'POST'>
-
-
-						<p>Name:</p>
-						  <input type = 'text' size='30' name = 'name' placeholder = '{{item.name}}'>
-            <p>Course:</p>
-              <input type ='text' size='60' name='course' placeholder = 'item course'>
-						<p>Description:</p>
-						  <input type ='text' size='60' name='description' placeholder = '{{item.description}}'>
-						<p>Price:</p>
-						  <input type ='text' size='30' name='price' placeholder = '{{item.price}}'>
-						</br>
-						</br>
-						<button type="button" class="btn btn-secondary pull-left">
-						<input type='submit' value='Edit'>
-						</button>
-					</form>
-
+        {% if service_id == 1 %}
+          <form action="{{url_for('editService', provider_id=provider_id,
+                          service_id=1, idItem=item.id )}}" method = 'POST'>
+            <p>Edit mobile number:</p>
+              <input type = 'integer' size='30' name = 'number' placeholder = '{{item.mob}}'>
+            </br>
+            </br>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='Edit'>
+            </button>
+          </form>
+          {% elif service_id == 2 %}
+            <form action="{{url_for('editService', provider_id=provider_id,
+                            service_id=1, idItem=item.id )}}" method = 'POST'>
+              <p>Edit telephone number:</p>
+                <input type = 'integer' size='30' name = 'number' placeholder = '{{item.tel}}'>
+              </br>
+              </br>
+              <button type="button" class="btn btn-secondary pull-left">
+              <input type='submit' value='Edit'>
+              </button>
+            </form>
+        {% endif %}
 
 			</div>
 </body>

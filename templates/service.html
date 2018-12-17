@@ -17,7 +17,8 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="http://localhost:5000/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="http://localhost:5000/static/arabity.png"
+            class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
           <h1>Arabity</h1>
@@ -42,11 +43,11 @@
 				</div>
 
 			<div class="row">
-        <button type="button" class="btn btn-secondary pull-left">
-          <a href='{{url_for('newService', provider_id=provider.id)}}'>Add new Service</a>
-        </button>
-
-      </div>
+        <div class="col-md-6 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-left">
+						<a href='{{url_for('newService',provider_id=provider.id)}}'>New provider Data</a>
+					</button>
+				</div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
 						<a href='{{url_for('providerName')}}'>Main Page</a>
@@ -73,42 +74,54 @@
       </div>
       <h3>mobile num:</h3>
       {% for i in mobile %}
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+      <div class="row container-fluid responsive" style="padding: 20px;
+           border: 3px solid #ccc">
         <p>{{i.mob}}</p>
+      </br>
+        <button type="button" class="btn btn-xs pull-left">
+          <a href='{{url_for('editService', provider_id = provider.id,
+              service_id = 1, idItem=i.id) }}'>Edit mobile</a>
+        </button>
+      </br>
       </div>
       {% endfor %}
         </br>
         </br>
       <h3>telephone num:</h3>
       {% for i in telephone %}
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+      <div class="row container-fluid responsive" style="padding: 20px;
+            border: 3px solid #ccc">
         <p>{{i.tel}}</p>
+      </br>
+        <button type="button" class="btn btn-xs pull-left">
+          <a href='{{url_for('editService', provider_id=provider.id,
+             service_id = 2, idItem=i.id) }}'>Edit telephone</a>
+        </button>
+      </br>
       </div>
       {% endfor %}
         </br>
         </br>
       <h3>visitors story:</h3>
       {% for i in story %}
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
-        <p>{{i.storyby}}</p>
+      <div class="row container-fluid responsive" style="padding: 20px;
+           border: 3px solid #ccc">
+        <p>{{i.post}}</p>
+        <p>Added at: {{i.timestamp}}</p>
         <p><strong>Added by: {{i.user_id}}</strong></p>
           </br>
       </div>
       {% endfor %}
     </br>
+    <button type="button" class="btn btn-xs pull-left">
+      <a href='{{url_for('newStory', provider_id=provider.id) }}'>Add your story</a>
+    </button>
+  </br>
     </br>
       <p><strong>Provider Added by: {{creator.name}}</strong></p>
       <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
         </br>
   		</div>
-    </br>
-      <button type="button" class="btn btn-xs pull-left">
-        <a href='{{url_for('editService', provider_id = provider.id, service_id = i.id) }}'>Edit</a>
-      </button>
-      <button type="button" class="btn btn-xs pull-left">
-        <a href = '{{url_for('deleteService', provider_id = provider.id, service_id = i.id ) }}'>Delete</a>
-      </button>
-      </br>
     </br>
     </br>
     <div class="row" style="padding: 20px; border: 3px solid #ccc">
