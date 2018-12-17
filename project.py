@@ -288,9 +288,10 @@ def providerService(provider_id):
 
 # 5: Create route for newServiceItem Function
 @app.route('/provider/<int:provider_id>/new/', methods=['GET', 'POST'])
-def newServiceItem(provider_id):
+def newService(provider_id):
     # verify that a user is logged in
-    if 'username' not in login_session:
+    return 'new services will be added soon'
+"""    if 'username' not in login_session:
         return redirect('/login')
     provider = session.query(provider).filter_by(id=provider_id).one()
     if request.method == 'POST':
@@ -310,9 +311,9 @@ def newServiceItem(provider_id):
         return redirect(url_for('providerService',
                         provider_id=provider_id, provider=provider))
     else:
-        return render_template('newserviceitem.html',
+        return render_template('newservice.html',
                                provider_id=provider_id,
-                               provider=provider)
+                               provider=provider)"""
 
 
 # 6: Create route for editServiceItem function

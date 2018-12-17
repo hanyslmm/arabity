@@ -42,9 +42,11 @@
 				</div>
 
 			<div class="row">
-				<div class="col-md-6 btn-group text-center" role="group">
+        <button type="button" class="btn btn-secondary pull-left">
+          <a href='{{url_for('newService', provider_id=provider.id)}}'>Add new Service</a>
+        </button>
 
-				</div>
+      </div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
 						<a href='{{url_for('providerName')}}'>Main Page</a>
@@ -99,6 +101,14 @@
       <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
         </br>
   		</div>
+    </br>
+      <button type="button" class="btn btn-xs pull-left">
+        <a href='{{url_for('editService', provider_id = provider.id, service_id = i.id) }}'>Edit</a>
+      </button>
+      <button type="button" class="btn btn-xs pull-left">
+        <a href = '{{url_for('deleteService', provider_id = provider.id, service_id = i.id ) }}'>Delete</a>
+      </button>
+      </br>
     </br>
     </br>
     <div class="row" style="padding: 20px; border: 3px solid #ccc">
