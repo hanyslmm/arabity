@@ -38,7 +38,7 @@ provider1 = Mobile(mob="01222345349", provider=hablo)
 session.add(provider1)
 session.commit()
 """
-provider1 = Story(storyby="a7la markz syana fe el 3alm احلى مركز صيانة ",
+provider1 = Story(post="a7la markz syana fe el 3alm احلى مركز صيانة ",
                   provider=hablo, user_id=2)
 session.add(provider1)
 session.commit()

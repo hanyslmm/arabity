@@ -169,7 +169,7 @@ class Story(Base):
 
 # story table mapper
     id = Column(Integer, primary_key = True)
-    storyby = Column(String(250), nullable=False)
+    post = Column(String(250), nullable=False)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
     provider = relationship(Provider)

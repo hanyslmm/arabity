@@ -287,64 +287,99 @@ def providerService(provider_id):
 
 
 # 5: Create route for newServiceItem Function
-@app.route('/provider/<int:provider_id>/new/', methods=['GET', 'POST'])
-def newService(provider_id):
+@app.route('/provider/<int:provider_id>/newStory/', methods=['GET', 'POST'])
+def newStory(provider_id):
     # verify that a user is logged in
-    return 'new services will be added soon'
-"""    if 'username' not in login_session:
+    provider = session.query(Provider).filter_by(id=provider_id).one()
+    # creator = getUserInfo(provider.user_id)
+    if 'username' not in login_session:
         return redirect('/login')
-    provider = session.query(provider).filter_by(id=provider_id).one()
+    user_id = login_session['user_id']
     if request.method == 'POST':
-        newItem = ServiceItem(provider_id=provider_id,
-                           user_id=provider.user_id)
-        if request.form['name']:
-            newItem.name = request.form['name']
-        if request.form['price']:
-            newItem.price = request.form['price']
-        if request.form['course']:
-            newItem.course = request.form['course']
-        if request.form['description']:
-            newItem.description = request.form['description']
-        session.add(newItem)
+        newStory = Story(provider_id=provider_id, user_id=user_id)
+        if request.form['post']:
+            newStory.post = request.form['post']
+        session.add(newStory)
         session.commit()
-        flash("{} service item Created!".format(newItem.name))
+        flash("service story Created!")
         return redirect(url_for('providerService',
                         provider_id=provider_id, provider=provider))
     else:
-        return render_template('newservice.html',
-                               provider_id=provider_id,
-                               provider=provider)"""
+        return render_template('newStory.html', provider_id=provider_id,
+                               provider=provider)
 
 
-# 6: Create route for editServiceItem function
-@app.route('/provider/<int:provider_id>/<int:service_id>/edit',
-           methods=['GET', 'POST'])
-def editServiceItem(provider_id, service_id):
-    editedItem = session.query(ServiceItem).filter_by(id=service_id).one()
+
+# 5: Create route for newServiceItem Function
+@app.route('/provider/<int:provider_id>/new/', methods=['GET', 'POST'])
+def newService(provider_id):
     # verify that a user is logged in
+    provider = session.query(Provider).filter_by(id=provider_id).one()
+    creator = getUserInfo(provider.user_id)
     if 'username' not in login_session:
         return redirect('/login')
-    if editedItem.user_id != login_session['user_id']:
+    if creator.id != login_session['user_id']:
         return
         "<script>{alert('You are not authorized to edit this');}</script>"
     if request.method == 'POST':
-        if request.form['name']:
-            editedItem.name = request.form['name']
-        if request.form['price']:
-            editedItem.price = request.form['price']
-        if request.form['description']:
-            editedItem.description = request.form['description']
-        if request.form['course']:
-            editedItem.course = request.form['course']
-        session.add(editedItem)
+        newMob = Mobile(provider_id=provider_id)
+        newTel = Telephone(provider_id=provider_id)
+        if request.form['mobile']:
+            newMob.mob = request.form['mobile']
+        if request.form['telephone']:
+            newTel.tel = request.form['telephone']
+        session.add(newMob)
+        session.add(newTel)
         session.commit()
-        # to make interaction with user
-        flash("{} service item Edited!".format(editedItem.name))
-        return redirect(url_for('providerService', provider_id=provider_id))
+        flash("service items Created!")
+        return redirect(url_for('providerService',
+                        provider_id=provider_id, provider=provider))
+    else:
+        return render_template('newserviceitem.html', provider_id=provider_id,
+                               provider=provider)
+
+
+
+# 6: Create route for editServiceItem function
+@app.route('/provider/<int:provider_id>/<int:service_id>/<int:idItem>/edit',
+           methods=['GET', 'POST'])
+def editService(provider_id, service_id, idItem):
+    # verify that a user is logged in
+    provider = session.query(Provider).filter_by(id=provider_id).one()
+    creator = getUserInfo(provider.user_id)
+    if 'username' not in login_session:
+        return redirect('/login')
+    if creator.id != login_session['user_id']:
+        return
+        "<script>{alert('You are not authorized to edit this');}</script>"
+    if service_id == 1:
+        editedItem = session.query(Mobile).filter_by(id=idItem).one()
+    if service_id == 2:
+        editedItem = session.query(Telephone).filter_by(id=idItem).one()
+    if request.method == 'POST':
+        if service_id == 1:
+            editedItem = session.query(Mobile).filter_by(id=idItem).one()
+            editedItem.mob = request.form['number']
+            # to make interaction with user
+            flash("{} number Added!".format(editedItem.mob))
+            return redirect(url_for('providerService', provider_id=provider_id))
+        #if service_id == 2:
+            #editedItem = session.query(Telephone).filter_by(provider_id=provider_id)
+                #return redirect(url_for('providerService', provider_id=provider_id))
+        if service_id == 2:
+            editedItem = session.query(Mobile).filter_by(id=idItem).one()
+            editedItem.tel = request.form['number']
+            # to make interaction with user
+            flash("{} number Added!".format(editedItem.tel))
+            return redirect(url_for('providerService', provider_id=provider_id))
+
     else:
         return render_template(
             'editserviceitem.html', provider_id=provider_id,
-            service_id=service_id, item=editedItem)
+             service_id=service_id, item=editedItem)
+
+
+
 
 
 # 7: Create a route for deleteServiceItem function
