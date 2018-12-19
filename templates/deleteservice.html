@@ -17,12 +17,13 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="http://localhost:5000/static/arabity.png"
+            class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
           <h1>Arabity</h1>
 					<h3>Car Service Provider Application</h3>
-					<p> Repairing What Your Husband Fixed.</p>
+					<p>Repairing What Your Husband Fixed.</p>
 					<p>
 						<!--  message flashing -->
 						{% with messages = get_flashed_messages() %}
@@ -43,11 +44,10 @@
 
 			<div class="row">
         <div class="col-md-6 btn-group text-center" role="group">
-					<button type="button" class="btn btn-secondary pull-left">
-						<a href= '{{url_for('providerService', provider_id= provider_id)}}'>Cancel</a>
-					</button>
-
-				</div>
+          <button type="button" class="btn btn-secondary pull-left">
+            <a href= '{{url_for('providerService', provider_id= item.provider_id)}}'>Cancel</a>
+          </button>
+        </div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
 						<a href='{{url_for('providerName')}}'>Main Page</a>
@@ -64,20 +64,27 @@
 					</button>
 				</div>
 			</div>
+
 	</nav>
 
     	<div class="container container-fluid responsive">
-					<h2> Add New Data to {{provider.name}} </h2>
-					<form action="{{url_for('newService',provider_id=provider_id)}}" method = 'POST'>
-						<p>Mobile number:</p>
-						  <input type = 'Integer' size='30' name = 'mobile' placeholder = 'new mobile' required>
-            <p>Telephone number:</p>
-						  <input type ='Integer' size='60' name='telephone' placeholder = 'new telephone' required>
-						</br>
-						<button type="button" class="btn btn-secondary pull-left">
-						<input type='submit' value='Create'>
-						</button>
-					</form>
+        {% if service_id == 1 %}
+          <form action="{{url_for('deleteService', provider_id=provider_id,
+                          service_id=1, idItem=item.id )}}" method = 'POST'>
+            <h2>are you sure you want to delete "{{item.mob}}" </h2>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='Delete'>
+            </button>
+          </form>
+          {% elif service_id == 2 %}
+          <form action="{{url_for('deleteService', provider_id=provider_id,
+                          service_id=1, idItem=item.id )}}" method = 'POST'>
+            <h2>are you sure you want to delete "{{item.tel}}" </h2>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='Delete'>
+            </button>
+          </form>
+        {% endif %}
 			</div>
 </body>
 </html>

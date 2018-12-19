@@ -63,7 +63,6 @@
 			</div>
 
 	</nav>
-
 	  	<div class="container container-fluid responsive">
 			<h1> New Provider </h1>
 			<form action="{{url_for('newProvider')}}" method = 'POST'>
@@ -75,8 +74,15 @@
       <input type='text' size='50' name='logo' placeholder="enter new Provider logo link" required>
       </br>
       </br>
+      <p>Mobile Number:</p>
+      <input type='Integer' size='30' name='mobile' placeholder="enter mobile number" required>
+      </br>
+      </br>
+      <p>Telephone Number:</p>
+      <input type='Integer' size='30' name='telephone' placeholder="enter telephone number" required>
+      </br>
+      </br>
       <input type='submit' value='Create'>
-
 			</form>
 			</div>
 </body>

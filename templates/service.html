@@ -72,7 +72,11 @@
       <div>
         <h2>{{provider.name}} Provider</h2>
       </div>
-      <h3>mobile num:</h3>
+      {% if mobile != None %}
+      <h3>habo num:</h3>
+      {% else %}
+      <h3>variable is not defined</h3>
+      {% endif %}
       {% for i in mobile %}
       <div class="row container-fluid responsive" style="padding: 20px;
            border: 3px solid #ccc">
@@ -81,6 +85,10 @@
         <button type="button" class="btn btn-xs pull-left">
           <a href='{{url_for('editService', provider_id = provider.id,
               service_id = 1, idItem=i.id) }}'>Edit mobile</a>
+        </button>
+        <button type="button" class="btn btn-xs pull-left">
+          <a href='{{url_for('deleteService', provider_id = provider.id,
+              service_id = 1, idItem=i.id) }}'>Delete mobile</a>
         </button>
       </br>
       </div>
@@ -96,6 +104,10 @@
         <button type="button" class="btn btn-xs pull-left">
           <a href='{{url_for('editService', provider_id=provider.id,
              service_id = 2, idItem=i.id) }}'>Edit telephone</a>
+        </button>
+        <button type="button" class="btn btn-xs pull-left">
+          <a href='{{url_for('deleteService', provider_id = provider.id,
+              service_id = 2, idItem=i.id) }}'>Delete telephone</a>
         </button>
       </br>
       </div>

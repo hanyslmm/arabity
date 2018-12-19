@@ -94,6 +94,16 @@
           </br>
       </div>
       {% endfor %}
+      <div class="container container-fluid responsive">
+					<h2> Add New Story to {{provider.name}}  </h2>
+					<form action="{{url_for('newStory',provider_id=provider.id)}}" method = 'POST'>
+						<p>share your experince:</p>
+						  <input type = 'paragraph' size='100' name = 'post' placeholder = 'عملو معاك ايه ؟' required>
+						<button type="button" class="btn btn-secondary pull-left">
+						<input type='submit' value='Create'>
+						</button>
+					</form>
+			</div>
     </br>
     </br>
       <p><strong>Provider Added by: {{creator.name}}</strong></p>

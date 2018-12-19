@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Delete Menu</title>
+  <title>Main</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -17,11 +17,13 @@
 
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH5R0y5qayuiElPD73gzkTivCHLx7oDWrYgsQz6QgFg3GkY_We" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="http://localhost:5000/static/arabity.png"
+            class="title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
-					<h1>Restaurant Menu Application</h1>
-					<p> Create your own menu and keep it updated </p>
+          <h1>Arabity</h1>
+					<h3>Car Service Provider Application</h3>
+					<p>Repairing What Your Husband Fixed.</p>
 					<p>
 						<!--  message flashing -->
 						{% with messages = get_flashed_messages() %}
@@ -41,15 +43,14 @@
 				</div>
 
 			<div class="row">
-				<div class="col-md-6 btn-group text-center" role="group">
-					<button type="button" class="btn btn-secondary pull-left">
-						<a href= '{{url_for('restaurantMenu', restaurant_id= item.restaurant_id)}}'>Cancel</a>
-					</button>
-
-				</div>
+        <div class="col-md-6 btn-group text-center" role="group">
+          <button type="button" class="btn btn-secondary pull-left">
+            <a href= '{{url_for('providerService', provider_id= item.provider_id)}}'>Cancel</a>
+          </button>
+        </div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
-						<a href='{{url_for('restaurantName')}}'>Main Page</a>
+						<a href='{{url_for('providerName')}}'>Main Page</a>
 					</button>
 
 				</div>
@@ -67,10 +68,29 @@
 	</nav>
 
     	<div class="container container-fluid responsive">
-				<form action="{{url_for('deleteMenuItem',restaurant_id=restaurant_id, menu_id=item.id )}}" method = 'POST'>
-					<h2>are you sure you want to delete "{{item.name}}" </h2>
-				<input type='submit' value='Delete'>
-				</form>
+        {% if service_id == 1 %}
+          <form action="{{url_for('editService', provider_id=provider_id,
+                          service_id=1, idItem=item.id )}}" method = 'POST'>
+            <p>Delete mobile number:</p>
+              <input type = 'integer' size='30' name = 'number' placeholder = '{{item.mob}}'>
+            </br>
+            </br>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='delete'>
+            </button>
+          </form>
+          {% elif service_id == 2 %}
+            <form action="{{url_for('editService', provider_id=provider_id,
+                            service_id=1, idItem=item.id )}}" method = 'POST'>
+              <p>Delete telephone number:</p>
+                <input type = 'integer' size='30' name = 'number' placeholder = '{{item.tel}}'>
+              </br>
+              </br>
+              <button type="button" class="btn btn-secondary pull-right">
+              <input type='submit' value='delete'>
+              </button>
+            </form>
+        {% endif %}
 			</div>
 </body>
 </html>

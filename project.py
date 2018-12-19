@@ -261,6 +261,11 @@ def newProvider():
                                    user_id=login_session['user_id'])
         session.add(newprovider)
         session.commit()
+        newmobile = Mobile(mob=request.form['mobile'], provider_id=newprovider.id)
+        newtelephone = Telephone(tel=request.form['telephone'], provider_id=newprovider.id)
+        session.add(newmobile)
+        session.add(newtelephone)
+        session.commit()
         return redirect(url_for('providerName'))
     else:
         return render_template('newprovider.html')
@@ -383,26 +388,40 @@ def editService(provider_id, service_id, idItem):
 
 
 # 7: Create a route for deleteServiceItem function
-@app.route('/provider/<int:provider_id>/<int:service_id>/delete/',
+@app.route('/provider/<int:provider_id>/<int:service_id>/<int:idItem>/delete/',
            methods=['GET', 'POST'])
-def deleteServiceItem(provider_id, service_id):
-    deletedItem = session.query(ServiceItem).filter_by(id=service_id).one()
+def deleteService(provider_id, service_id, idItem):
     # verify that a user is logged in
+    provider = session.query(Provider).filter_by(id=provider_id).one()
+    creator = getUserInfo(provider.user_id)
     if 'username' not in login_session:
         return redirect('/login')
-    if deletedItem.user_id != login_session['user_id']:
+    if creator.id != login_session['user_id']:
         return
-        "<script>{alert('You're not authorized to delete this');}</script>"
+        "<script>{alert('You are not authorized to delete this');}</script>"
+    if service_id == 1:
+        deletedItem = session.query(Mobile).filter_by(id=idItem).one()
+    if service_id == 2:
+        deletedItem = session.query(Telephone).filter_by(id=idItem).one()
     if request.method == 'POST':
-        session.delete(deletedItem)
-        session.commit()
-        # to make interaction with user
-        flash("{} service item Deleted!".format(deletedItem.name))
-        return redirect(url_for('providerService', provider_id=provider_id))
+        if service_id == 1:
+            deletedItem = session.query(Mobile).filter_by(id=idItem).one()
+            session.delete(deletedItem)
+            session.commit()
+            # to make interaction with user
+            flash("{} provider number Deleted!".format(deletedItem.mob))
+            return redirect(url_for('providerService', provider_id=provider_id))
+        if service_id == 2:
+            deletedItem = session.query(Telephone).filter_by(id=idItem).one()
+            session.delete(deletedItem)
+            session.commit()
+            # to make interaction with user
+            flash("{} provider number Deleted!".format(deletedItem.tel))
+            return redirect(url_for('providerService', provider_id=provider_id))
     else:
-        return render_template('deleteserviceitem.html',
-                               provider_id=provider_id,
-                               service_id=service_id, item=deletedItem)
+        return render_template('deleteservice.html',
+                                   provider_id=provider_id,
+                                   service_id=service_id, item=deletedItem)
 
 
 if __name__ == '__main__':
