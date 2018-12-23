@@ -82,6 +82,15 @@
       <input type='Integer' size='30' name='telephone' placeholder="enter telephone number" required>
       </br>
       </br>
+      </br>
+      <p>Governorate:</p>
+      <select name="governorate">
+      {% for i in governorate %}
+      <option value={{i.address}}>{{i.address}}</option>
+      {% endfor %}
+      </select>
+      </br>
+      </br>
       <input type='submit' value='Create'>
 			</form>
 			</div>

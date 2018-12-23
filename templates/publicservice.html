@@ -63,37 +63,46 @@
 			</div>
 
 	</nav>
-
-
     <div class="container container-fluid responsive">
       <div>
         <h2>{{provider.name}} Provider</h2>
       </div>
-      <h3>mobile num:</h3>
-      {% for i in mobile %}
+      <div class="row container-fluid responsive" style="padding: 20px;
+           border: 3px solid #ccc">
+      <h3>Address:</h3>
+
+        <h4>{{add.address}}</h4>
+      </div>
+      </br>
+      </br>
       <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+        <h3>Mobile num:</h3>
+        {% for i in mobile %}
         <p>{{i.mob}}</p>
+        {% endfor %}
       </div>
-      {% endfor %}
         </br>
         </br>
-      <h3>telephone num:</h3>
+      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+      <h3>Telephone num:</h3>
+      </br>
       {% for i in telephone %}
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
         <p>{{i.tel}}</p>
-      </div>
       {% endfor %}
+      </div>
         </br>
         </br>
-      <h3>visitors story:</h3>
-      {% for i in story %}
+
       <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+        <h3>Visitors story:</h3>
+        </br>
+        {% for i in story %}
         <p>{{i.post}}</p>
         <p>Added at: {{i.timestamp}}</p>
         <p><strong>Added by: {{i.user_id}}</strong></p>
           </br>
+        {% endfor %}
       </div>
-      {% endfor %}
       <div class="container container-fluid responsive">
 					<h2> Add New Story to {{provider.name}}  </h2>
 					<form action="{{url_for('newStory',provider_id=provider.id)}}" method = 'POST'>
@@ -122,6 +131,5 @@
     </div>
     </br>
   	</div>
-
   </body>
 </html>

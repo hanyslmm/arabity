@@ -7,7 +7,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from database_setup_arabity import Base, Provider, User, UserType, Story
 from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
+from flask import jsonify
+import json
 
+'''Addresses = json.loads(
+    open('/Users/macbookpro/projects/arabity/eg-gov.json', 'r').read())['city']
+print (Addresses)'''
 # === let program know which database engine we want to communicate===
 engine = create_engine('sqlite:///arabity.db')
 
@@ -18,6 +23,32 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
+# adding governorate address
+govadd1 = ["Alexandria", 'Aswan', 'Asyut', 'Beheira', 'Beni Suef', 'Cairo', 'Dakahlia', 'Damietta', 'Faiyum']
+govadd2 = ['Gharbia', 'Giza', 'Ismailia', 'Kafr el-Sheikh', 'Matruh', 'Minya', 'Monufia']
+govadd3 = ['New Valley', 'North Sinai', 'Port Said', 'Qalyubia', 'Qena', 'Red Sea']
+govadd4 = ['Al Sharqia', 'Sohag', 'South Sinai', 'Suez', 'Luxor']
+govadd = govadd1 + govadd2 + govadd3 + govadd4
+print(govadd)
+
+'''for gov in govadd:
+    add = Address(address=gov, parent_id=0)
+    session.add(add)
+    session.commit()
+'''
+
+# Interact with my database and see what's inside address
+govs = session.query(Address).all()
+for gov in govs:
+    print(gov.id)
+    print(gov.address)
+    print("\n")
+
+provider_id = 5
+provadd = session.query(ProviderAdd).filter_by(provider_id=provider_id).one()
+if provadd != None:
+    add = session.query(Address).filter_by(id=provadd.address_id).one()
+    print (add.address)
 # adding new entry to arabity database
 """newEntry = ClassName(property = "value", )
 session.add(newEntry)
@@ -27,7 +58,7 @@ session.add(myFirstProvider)
 session.commit()"""
 # end of adding Provider Pizza Station
 
-hablo = session.query(Provider).filter_by(id=1).one()
+# hablo = session.query(Provider).filter_by(id=1).one()
 
 """# adding new ServiceItem entry to Pizza Station
 provider1 = Telephone(tel="02334987", provider=hablo)
@@ -38,10 +69,10 @@ provider1 = Mobile(mob="01222345349", provider=hablo)
 session.add(provider1)
 session.commit()
 """
-provider1 = Story(post="a7la markz syana fe el 3alm احلى مركز صيانة ",
-                  provider=hablo, user_id=2)
-session.add(provider1)
-session.commit()
+# provider1 = Story(post="a7la markz syana fe el 3alm احلى مركز صيانة ",
+#                  provider=hablo, user_id=2)
+# session.add(provider1)
+# session.commit()
 
 # Interact with my database and see what's inside of it
 """vaggis = session.query(ServiceItem).filter_by(name = 'Veggie Burger')

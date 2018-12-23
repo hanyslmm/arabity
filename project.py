@@ -256,6 +256,7 @@ def newProvider():
     # verify that a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
+    governorate = session.query(Address).filter_by(parent_id=0).all()
     if request.method == 'POST':
         newprovider = Provider(name=request.form['name'], logo=request.form['logo'],
                                    user_id=login_session['user_id'])
@@ -266,9 +267,13 @@ def newProvider():
         session.add(newmobile)
         session.add(newtelephone)
         session.commit()
+        gov = session.query(Address).filter_by(address=request.form['governorate']).one()
+        newadd = ProviderAdd(provider_id=newprovider.id, address_id=gov.id)
+        session.add(newadd)
+        session.commit()
         return redirect(url_for('providerName'))
     else:
-        return render_template('newprovider.html')
+        return render_template('newprovider.html', governorate=governorate)
 
 
 # 4: list service items in provider using its id
@@ -280,15 +285,16 @@ def providerService(provider_id):
     telephone = session.query(Telephone).filter_by(provider_id=provider.id)
     story = session.query(Story).filter_by(provider_id=provider.id)
     creator = getUserInfo(provider.user_id)
-
+    provadd = session.query(ProviderAdd).filter_by(provider_id=provider_id).one()
+    add = session.query(Address).filter_by(id=provadd.address_id).one()
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
                                 mobile=mobile,telephone=telephone,
-                                story=story, creator=creator)
+                                story=story, creator=creator, add=add)
     else:
         return render_template('service.html', provider=provider,
                                 mobile=mobile,telephone=telephone,
-                                story=story, creator=creator)
+                                story=story, creator=creator, add=add)
 
 
 # 5: Create route for newServiceItem Function
