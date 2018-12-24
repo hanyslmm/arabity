@@ -41,6 +41,19 @@ class Provider(Base):
     logo = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
+    provider_add = relationship("ProviderAdd", cascade="all, delete-orphan")
+    telephone = relationship("Telephone", cascade="all, delete-orphan")
+    Mobile = relationship("mobile", cascade="all, delete-orphan")
+    Location = relationship("Location", cascade="all, delete-orphan")
+    provider_brand = relationship("ProviderBrand", cascade="all, delete-orphan")
+    provider_service = relationship("ProviderService", cascade="all, delete-orphan")
+    provider_verification = relationship("ProviderVerification", cascade="all, delete-orphan")
+    story = relationship("Story", cascade="all, delete-orphan")
+    social_link = relationship("SocialLink", cascade="all, delete-orphan")
+    provider_tag = relationship("ProviderTag", cascade="all, delete-orphan")
+    provider_extra = relationship("ProviderExtra", cascade="all, delete-orphan")
+
+
 
 
 # Address class definition code
