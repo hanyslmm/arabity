@@ -31,7 +31,6 @@ class User(Base):
     usertype = relationship(UserType)
 
 
-# Provider class definition code
 class Provider(Base):
     __tablename__ = 'provider'
 
@@ -43,8 +42,8 @@ class Provider(Base):
     user = relationship(User)
     provider_add = relationship("ProviderAdd", cascade="all, delete-orphan")
     telephone = relationship("Telephone", cascade="all, delete-orphan")
-    Mobile = relationship("mobile", cascade="all, delete-orphan")
-    Location = relationship("Location", cascade="all, delete-orphan")
+    mobile = relationship("Mobile", cascade="all, delete-orphan")
+    location = relationship("Location", cascade="all, delete-orphan")
     provider_brand = relationship("ProviderBrand", cascade="all, delete-orphan")
     provider_service = relationship("ProviderService", cascade="all, delete-orphan")
     provider_verification = relationship("ProviderVerification", cascade="all, delete-orphan")
@@ -52,8 +51,6 @@ class Provider(Base):
     social_link = relationship("SocialLink", cascade="all, delete-orphan")
     provider_tag = relationship("ProviderTag", cascade="all, delete-orphan")
     provider_extra = relationship("ProviderExtra", cascade="all, delete-orphan")
-
-
 
 
 # Address class definition code
@@ -254,6 +251,7 @@ class ProviderExtra(Base):
     extra = relationship(Extra)
 
 
+
 # === to connect to an existing db or create a new one ===
 engine = create_engine('sqlite:///arabity.db')
 Base.metadata.create_all(engine)
@@ -263,8 +261,8 @@ if __name__ == '__main__':
     # fill usertype table with Admin and Normal
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
-    normal = UserType(name='Normal')
+    normal = UserType(name='normal')
     session.add(normal)
-    admin = UserType(name='Admin')
+    admin = UserType(name='admin')
     session.add(admin)
     session.commit()
