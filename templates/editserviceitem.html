@@ -68,7 +68,7 @@
 	</nav>
 
     	<div class="container container-fluid responsive">
-        {% if service_id == 1 %}
+          {% if service_id == 1 %}
           <form action="{{url_for('editService', provider_id=provider_id,
                           service_id=1, idItem=item.id )}}" method = 'POST'>
             <p>Edit mobile number:</p>
@@ -81,7 +81,7 @@
           </form>
           {% elif service_id == 2 %}
             <form action="{{url_for('editService', provider_id=provider_id,
-                            service_id=1, idItem=item.id )}}" method = 'POST'>
+                            service_id=2, idItem=item.id )}}" method = 'POST'>
               <p>Edit telephone number:</p>
                 <input type = 'integer' size='30' name = 'number' placeholder = '{{item.tel}}'>
               </br>
@@ -90,7 +90,24 @@
               <input type='submit' value='Edit'>
               </button>
             </form>
-        {% endif %}
+          {% elif service_id == 3 %}
+          <form action="{{url_for('editService', provider_id=provider_id,
+                          service_id=3, idItem=1)}}" method = 'POST'>
+            <p>choose another governorate:</p>
+            <div class="container container-fluid responsive">
+              <select name="governorate">
+              {% for i in governorate %}
+              <option value={{i.address}}>{{i.address}}</option>
+              {% endfor %}
+              </select>
+              </br>
+            </br>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='Edit'>
+            </button>
+          </div>
+          </form>
+          {% endif %}
 
 			</div>
 </body>

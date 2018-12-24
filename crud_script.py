@@ -31,13 +31,12 @@ govadd4 = ['Al Sharqia', 'Sohag', 'South Sinai', 'Suez', 'Luxor']
 govadd = govadd1 + govadd2 + govadd3 + govadd4
 print(govadd)
 
-'''for gov in govadd:
+for gov in govadd:
     add = Address(address=gov, parent_id=0)
     session.add(add)
     session.commit()
-'''
 
-# Interact with my database and see what's inside address
+"""# Interact with my database and see what's inside address
 govs = session.query(Address).all()
 for gov in govs:
     print(gov.id)
@@ -48,7 +47,7 @@ provider_id = 5
 provadd = session.query(ProviderAdd).filter_by(provider_id=provider_id).one()
 if provadd != None:
     add = session.query(Address).filter_by(id=provadd.address_id).one()
-    print (add.address)
+    print (add.address)"""
 # adding new entry to arabity database
 """newEntry = ClassName(property = "value", )
 session.add(newEntry)

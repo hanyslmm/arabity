@@ -48,11 +48,12 @@
 					</button>
 
 				</div>
-				<div class="col-md-3 btn-group text-center" role="group">
-          <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-              <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-        </div>
+        <div class="col-md-3 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-left">
+						<a href='{{url_for('providerName')}}'>Main Page</a>
+					</button>
+
+				</div>
 				<div class="col-md-3 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-right">
 						{% if 'username' not in session %}

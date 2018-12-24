@@ -267,7 +267,7 @@ def newProvider():
         session.add(newmobile)
         session.add(newtelephone)
         session.commit()
-        gov = session.query(Address).filter_by(address=request.form['governorate']).one()
+        gov = session.query(Address).filter_by(address=request.form['gov']).one()
         newadd = ProviderAdd(provider_id=newprovider.id, address_id=gov.id)
         session.add(newadd)
         session.commit()
@@ -285,6 +285,7 @@ def providerService(provider_id):
     telephone = session.query(Telephone).filter_by(provider_id=provider.id)
     story = session.query(Story).filter_by(provider_id=provider.id)
     creator = getUserInfo(provider.user_id)
+    print ("hablooooooooooooooooooooooo")
     provadd = session.query(ProviderAdd).filter_by(provider_id=provider_id).one()
     add = session.query(Address).filter_by(id=provadd.address_id).one()
     if 'username' not in login_session or creator.id != login_session['user_id']:
@@ -327,6 +328,7 @@ def newService(provider_id):
     # verify that a user is logged in
     provider = session.query(Provider).filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
+    governorate = session.query(Address).filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
@@ -358,6 +360,7 @@ def editService(provider_id, service_id, idItem):
     # verify that a user is logged in
     provider = session.query(Provider).filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
+    governorate = session.query(Address).filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
@@ -367,6 +370,8 @@ def editService(provider_id, service_id, idItem):
         editedItem = session.query(Mobile).filter_by(id=idItem).one()
     if service_id == 2:
         editedItem = session.query(Telephone).filter_by(id=idItem).one()
+    if service_id == 3:
+        editedItem = session.query(ProviderAdd).filter_by(provider_id=provider.id).one()
     if request.method == 'POST':
         if service_id == 1:
             editedItem = session.query(Mobile).filter_by(id=idItem).one()
@@ -378,16 +383,26 @@ def editService(provider_id, service_id, idItem):
             #editedItem = session.query(Telephone).filter_by(provider_id=provider_id)
                 #return redirect(url_for('providerService', provider_id=provider_id))
         if service_id == 2:
-            editedItem = session.query(Mobile).filter_by(id=idItem).one()
+            editedItem = session.query(Telephone).filter_by(id=idItem).one()
             editedItem.tel = request.form['number']
             # to make interaction with user
             flash("{} number Added!".format(editedItem.tel))
             return redirect(url_for('providerService', provider_id=provider_id))
+        if service_id == 3:
+            addItem = session.query(Address).filter_by(address=request.form['governorate']).one()
+            editedItem = session.query(ProviderAdd).filter_by(provider_id=provider.id).one()
+            editedItem.address_id = addItem.id
+            # to make interaction with user
+            flash("{} address updated!".format(addItem.address))
+            return redirect(url_for('providerService', provider_id=provider_id))
+        session.add(editedItem)
+        session.commit()
+
 
     else:
         return render_template(
             'editserviceitem.html', provider_id=provider_id,
-             service_id=service_id, item=editedItem)
+             service_id=service_id, governorate=governorate, item=editedItem)
 
 
 

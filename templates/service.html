@@ -72,14 +72,23 @@
       <div>
         <h2>{{provider.name}} Provider</h2>
       </div>
-      {% if mobile != None %}
-      <h3>Mobile num:</h3>
-      {% else %}
-      <h3>variable is not defined</h3>
-      {% endif %}
-      {% for i in mobile %}
       <div class="row container-fluid responsive" style="padding: 20px;
            border: 3px solid #ccc">
+      <h3>Address:</h3>
+        <h4>{{add.address}}</h4>
+        <button type="button" class="btn btn-xs pull-left">
+          <a href='{{url_for('editService', provider_id=provider.id,
+              service_id=3, idItem=1) }}'>Edit Address</a>
+        </button>
+      </div>
+      </br>
+      </br>
+
+
+      <div class="row container-fluid responsive" style="padding: 20px;
+           border: 3px solid #ccc">
+       <h3>Mobile num:</h3>
+       {% for i in mobile %}
         <p>{{i.mob}}</p>
       </br>
         <button type="button" class="btn btn-xs pull-left">
@@ -95,21 +104,11 @@
       {% endfor %}
         </br>
         </br>
-        <div class="row container-fluid responsive" style="padding: 20px;
-             border: 3px solid #ccc">
-        <h3>Address:</h3>
 
-          <h4>{{add.address}}</h4>
-        </div>
-        </br>
-        </br>
-
-
-
-      <h3>telephone num:</h3>
-      {% for i in telephone %}
       <div class="row container-fluid responsive" style="padding: 20px;
             border: 3px solid #ccc">
+        <h3>telephone num:</h3>
+        {% for i in telephone %}
         <p>{{i.tel}}</p>
       </br>
         <button type="button" class="btn btn-xs pull-left">
