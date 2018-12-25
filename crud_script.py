@@ -1,7 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # used to manipulate diff parts of py run-time env.
 import sys
 import datetime
 import os
+import numpy as np
+import pandas as pd
+
 # import all modules needed for configuration
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
@@ -10,9 +16,7 @@ from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
 from flask import jsonify
 import json
 
-'''Addresses = json.loads(
-    open('/Users/macbookpro/projects/arabity/eg-gov.json', 'r').read())['city']
-print (Addresses)'''
+
 # === let program know which database engine we want to communicate===
 engine = create_engine('sqlite:///arabity.db')
 
@@ -23,7 +27,17 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
-# adding governorate address
+# Create Admin user
+adminUser = User(name="Arabity", email="arabity4@gmail.com",
+             picture='https://secure.gravatar.com/avatar/22ccd1d726®91c9ed4f6d235863713c45', user_type=2)
+session.add(adminUser)
+session.commit()
+
+
+
+
+
+"""# adding governorate address
 govadd1 = ["Alexandria", 'Aswan', 'Asyut', 'Beheira', 'Beni Suef', 'Cairo', 'Dakahlia', 'Damietta', 'Faiyum']
 govadd2 = ['Gharbia', 'Giza', 'Ismailia', 'Kafr el-Sheikh', 'Matruh', 'Minya', 'Monufia']
 govadd3 = ['New Valley', 'North Sinai', 'Port Said', 'Qalyubia', 'Qena', 'Red Sea']
@@ -34,7 +48,7 @@ print(govadd)
 for gov in govadd:
     add = Address(address=gov, parent_id=0)
     session.add(add)
-    session.commit()
+    session.commit()"""
 
 """# Interact with my database and see what's inside address
 govs = session.query(Address).all()

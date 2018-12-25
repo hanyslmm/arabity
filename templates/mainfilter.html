@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Main</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		p.groove {border-style: groove;}
+	</style>
+</head>
+<body>
+
+	<nav class="container navbar navbar-default">
+
+			<div class="row jumbotron text-center" >
+				<div class="col-sm-2">
+					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+				</div>
+				<div class="col-sm-10">
+          <h1>Arabity</h1>
+					<h3>Car Service Provider Application</h3>
+					<p> Repairing What Your Husband Fixed.</p>
+					<p>
+						<!--  message flashing -->
+						{% with messages = get_flashed_messages() %}
+						{% if messages %}
+						<ul>
+							{% for message in messages %}
+								<li>
+									<strong>{{message}}</strong>
+								</li>
+							{% endfor %}
+						</ul>
+						{% endif %}
+						{% endwith %}
+					</p>
+
+				</div>
+				</div>
+
+			<div class="row">
+				<div class="col-md-6 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-left">
+						<a href='{{url_for('newProvider')}}'>Create new provider</a>
+					</button>
+
+				</div>
+				<div class="col-md-3 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-left">
+						<a href='{{url_for('providerName')}}'>Main Page</a>
+					</button>
+
+				</div>
+				<div class="col-md-3 btn-group text-center" role="group">
+					<button type="button" class="btn btn-secondary pull-right">
+						{% if 'username' not in session %}
+						<a  href="{{url_for('showLogin')}}">Click Here to login</a>
+						{% else %}
+						<a  href="{{url_for('gdisconnect')}}">Disconnect</a>
+						{% endif %}
+					</button>
+				</div>
+			</div>
+
+	</nav>
+
+	<div class="container">
+		{% for i in provider %}
+		<div class="col-md-3 pill-center" style="padding: 20px; border: 3px solid #ccc">
+      <div class="col-md-6">
+        <p><strong>{{i.name}}</strong></p>
+      </div>
+      <div class="col-md-6">
+        <img src={{i.logo}} class="title-logo img-fluid img-responsive" height="150" width="150"/>
+      </div>
+				</br>
+				<button type="button" class="btn btn-xs pull-left">
+				<a href='{{url_for('providerService', provider_id = i.id, creator = i.user_id) }}'>Go to service</a>
+				</button>
+				<button type="button" class="btn btn-xs pull-right">
+				<a href='{{url_for('providerDelete', provider_id = i.id, creator = i.user_id) }}'>Delete provider</a>
+				</button>
+				</br>
+		</div>
+	  {% endfor %}
+	</div>
+</br>
+</br>
+  <div class="row" style="padding: 20px; border: 3px solid #ccc">
+    <blockquote>
+      <footer>Made by: Arabity</footer>
+      <h4>Keeping You And Your Family Safe.</h4>
+      <h5>Millions of people own cars, and they will inevitably need repairs or maintenance at some point in time. This type of company gives you great return ccustomers as well as a good rate of new customers.
+            A good slogan for you car service business is a great key to success.</h5>
+    </blockquote>
+  </div>
+</br>
+</body>
+</html>
