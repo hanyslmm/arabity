@@ -28,8 +28,8 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
 # read csv file create DataFrame sheet
-sheet = pd.read_csv('/Users/macbookpro/projects/arabity/testo.csv')
-# create variable counter count all rows and columns in the csv
+sheet = pd.read_csv('/Users/macbookpro/projects/arabity/areasheet.csv')
+# create variable counter count all rows in the csv
 row_counter = sheet.shape[0]
 row_counter = int(row_counter)
 # col_counter = sheet.shape[1]
@@ -50,28 +50,31 @@ while i_row < row_counter:
     prov_tel = int(prov_tel)
     prov_user - int(prov_user)
 
+    prov_exist = session.query(Provider.name).\
+                    filter(Provider.name == prov_name).scalar()
+    if prov_exist is None:
+        # ADD new provider with name and logo
+        newprovider = Provider(name=prov_name, logo=prov_logo, user_id=3)
+        session.add(newprovider)
+        session.commit()
 
-    # ADD new provider with name and logo
-    newprovider = Provider(name=prov_name, logo=prov_logo, user_id=3)
-    session.add(newprovider)
-    session.commit()
+        # ADD provider address id
+        address = session.query(Address).filter_by(address=prov_gov).one()
+        prov_add = ProviderAdd(provider_id=newprovider.id, address_id=address.id)
+        session.add(prov_add)
+        session.commit()
 
-    # ADD provider address id
-    address = session.query(Address).filter_by(address=prov_gov).one()
-    prov_add = ProviderAdd(provider_id=newprovider.id, address_id=address.id)
-    session.add(prov_add)
-    session.commit()
+        # ADD provider mobile
+        mobile = Mobile(mob=prov_mob, provider_id=newprovider.id)
+        session.add(mobile)
+        session.commit()
 
-    # ADD provider mobile
-    mobile = Mobile(mob=prov_mob, provider_id=newprovider.id)
-    session.add(mobile)
-    session.commit()
-
-    # ADD provider telephone
-    telephone = Telephone(tel=prov_tel, provider_id=newprovider.id)
-    session.add(telephone)
-    session.commit()
-
+        # ADD provider telephone
+        telephone = Telephone(tel=prov_tel, provider_id=newprovider.id)
+        session.add(telephone)
+        session.commit()
+    else:
+        print ("provider name {} already exist".format(prov_exist))
     i_row += 1
 
 
