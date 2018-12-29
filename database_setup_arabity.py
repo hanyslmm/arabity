@@ -16,7 +16,7 @@ class UserType(Base):
     __tablename__ = 'usertype'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(20), nullable=False)
 
 
 # add class definition code and mapper for user table
@@ -53,6 +53,14 @@ class Provider(Base):
     provider_extra = relationship("ProviderExtra", cascade="all, delete-orphan")
 
 
+# add AddType class definition code for add_type table
+class AddType(Base):
+    __tablename__ = 'add_type'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+
+
 # Address class definition code
 class Address(Base):
     __tablename__ = 'address'
@@ -61,6 +69,8 @@ class Address(Base):
     id = Column(Integer, primary_key=True)
     address = Column(String(80), nullable=False)
     parent_id = Column(Integer, nullable=False)
+    type_id = Column(Integer, ForeignKey('add_type.id'), nullable=False)
+    add_type = relationship(AddType)
 
 
 # ProviderAdd class definition code

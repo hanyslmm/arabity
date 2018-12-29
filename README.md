@@ -8,6 +8,9 @@ https://chartio.com/learn/databases/how-to-find-duplicate-values-in-a-sql-table/
 
 https://stackoverflow.com/questions/32938475/flask-sqlalchemy-check-if-row-exists-in-table
 
+## SQL statements:
+
+https://www.techonthenet.com/sql_server/tables/alter_table.php
 
 ## Pandas:
 
