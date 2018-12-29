@@ -75,7 +75,10 @@
       <div class="row container-fluid responsive" style="padding: 20px;
            border: 3px solid #ccc">
       <h3>Address:</h3>
-        <h4>{{add.address}}</h4>
+      <font color="blue">Governorate is {{addDic['Governorate']}}</font>
+      </br>
+      <font color="red">City is {{addDic['City']}}</font>
+      </br>
         <button type="button" class="btn btn-xs pull-left">
           <a href='{{url_for('editService', provider_id=provider.id,
               service_id=3, idItem=1) }}'>Edit Address</a>

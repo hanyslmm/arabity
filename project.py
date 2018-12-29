@@ -8,7 +8,7 @@ import string
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from database_setup_arabity import Base, User, Provider
-from database_setup_arabity import UserType, Story
+from database_setup_arabity import UserType, Story, AddType
 from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
 # google OAuth
 from oauth2client.client import flow_from_clientsecrets  # creates flow object
@@ -286,18 +286,35 @@ def providerService(provider_id):
     telephone = session.query(Telephone).filter_by(provider_id=provider.id)
     story = session.query(Story).filter_by(provider_id=provider.id)
     creator = getUserInfo(provider.user_id)
-    print ("hablooooooooooooooooooooooo")
+    # GET provider add from provider_add table
     provadd = session.query(ProviderAdd).filter_by\
                                         (provider_id=provider_id).one()
+    # GET array of address objects while parent_id = 0
+
+    # GET end of tree address object add from address table
     add = session.query(Address).filter_by(id=provadd.address_id).one()
+    addDic = {}
+    while True:
+        # GET add type from add_type table
+        addtype = session.query(AddType).filter_by(id=add.type_id).one()
+        # SAVE address in dictionary
+        addDic[addtype.name]=add.address
+        if add.parent_id == 0:
+            break
+        # GET the next address object add from address table using parent_id
+        add = session.query(Address).filter_by(id=add.parent_id).one()
+
+
+    # ANOTHER method addDict.__setitem__(addtype, add)
+
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
                                 mobile=mobile,telephone=telephone,
-                                story=story, creator=creator, add=add)
+                                story=story, creator=creator, addDic=addDic)
     else:
         return render_template('service.html', provider=provider,
                                 mobile=mobile,telephone=telephone,
-                                story=story, creator=creator, add=add)
+                                story=story, creator=creator, addDic=addDic)
 
 
 # 5: Create route for newServiceItem Function
@@ -321,7 +338,6 @@ def newStory(provider_id):
     else:
         return render_template('newStory.html', provider_id=provider_id,
                                provider=provider)
-
 
 
 # 5: Create route for newServiceItem Function
@@ -352,7 +368,6 @@ def newService(provider_id):
     else:
         return render_template('newserviceitem.html', provider_id=provider_id,
                                provider=provider)
-
 
 
 # 6: Create route for editServiceItem function
@@ -407,9 +422,6 @@ def editService(provider_id, service_id, idItem):
         return render_template(
             'editserviceitem.html', provider_id=provider_id,
              service_id=service_id, governorate=governorate, item=editedItem)
-
-
-
 
 
 # 7: Create a route for deleteServiceItem function

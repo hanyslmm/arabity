@@ -24,3 +24,4 @@ https://www.youtube.com/watch?v=2AFGPdNn4FM
 
 http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 
+http://flask.pocoo.org/docs/1.0/patterns/viewdecorators/
