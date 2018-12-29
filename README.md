@@ -17,3 +17,7 @@ https://youtu.be/9d5-Ti6onew
 
 https://www.youtube.com/watch?v=2AFGPdNn4FM
 
+## Wrapping Functions resources:
+
+http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
+
