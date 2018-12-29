@@ -83,11 +83,6 @@ while i_row < row_counter:
 
 
 
-
-
-
-
-
 """booleans = []
 for length in sheet.Gov:
     if length == "Alexandria":

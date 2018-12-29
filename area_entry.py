@@ -44,7 +44,7 @@ while i_row < row_counter:
         gov_id = session.query(Address.id).\
                   filter(Address.address == prov_gov).scalar()
         # ADD area to address table
-        area_address = Address(address=prov_area, parent_id=gov_id)
+        area_address = Address(address=prov_area, parent_id=gov_id, type_id=3)
         session.add(area_address)
         session.commit()
     # ASSIGN address to provider_id in provider_add table
@@ -63,7 +63,7 @@ while i_row < row_counter:
         session.add(prov_address)
         session.commit()
     else:
-        # address already exist so update with new value 
+        # address already exist so update with new value
         prov_address = session.query(ProviderAdd).\
                         filter_by(provider_id=prov_id).one()
         prov_address.address_id = area_id

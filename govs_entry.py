@@ -37,6 +37,6 @@ govadd = govadd1 + govadd2 + govadd3 + govadd4
 print(govadd)
 
 for gov in govadd:
-    add = Address(address=gov, parent_id=0)
+    add = Address(address=gov, parent_id=0, type_id=2)
     session.add(add)
     session.commit()
