@@ -221,10 +221,80 @@ def gdisconnect():
 @app.route('/provider')
 def providerName():
     provider = session.query(Provider).all()
+    governorate = session.query(Address).filter_by(parent_id=0).all()
+    try:
+        if filterGov in locals():
+            print ("hablooooooooooooooooooooooo")
+            print ("hablooooooooooooooooooooooo")
+            # create array of objects for all records in provider_add table
+            allAdd = session.query(ProviderAdd).all()
+            provider = []
+            # FOR loop till parent_id = 0
+            for add in allAdd:
+                add_id = session.query(Address).filter_by(id=add.address_id).one()
+                # WHILE loop till parent_id = 0
+                while True:
+                    # IF parent id = 0 check if governorate name = filterGov
+                    if add.parent_id == 0:
+                        if add.address == filterGov:
+                            filterProv = session.query(Provider).\
+                                                filter_by(id=add.provider_id).one()
+                            # ADD result to provider list
+                            provider.append(filterProv)
+                    # GET the next address object add from address table using parent_id
+                    add = session.query(Address).filter_by(id=add.parent_id).one()
+    except:
+
+
+
+        if 'username' not in login_session:
+            return render_template('publicmain.html', provider=provider,\
+                                    governorate=governorate)
+        else:
+            return render_template('main.html', provider=provider,\
+                                    governorate=governorate)
+
+
+# FILTER provider
+@app.route('/provider/<string:filterGov>', methods=['GET', 'POST'])
+def providerFilter(filterGov):
+    provider = session.query(Provider).all()
+    print (type(provider))
+    governorate = session.query(Address).filter_by(parent_id=0).all()
+    provider = []
+    # create array of objects for all records in provider_add table
+    allAdd_id = session.query(ProviderAdd).all()
+    # FOR loop till parent_id = 0
+
+    for addId in allAdd_id:
+        childAdd = session.query(Address).filter_by\
+                                        (id=addId.address_id).one()
+        print ("hablooooooooooooooooooooooo")
+        print (childAdd.address)
+        # WHILE loop till parent_id = 0
+        while True:
+            # IF parent id = 0 check if governorate name = filterGov
+            if childAdd.parent_id == 0:
+                if childAdd.address == filterGov:
+                #    filterAdd = session.query(ProviderAdd).\
+                #                filter_by(address_id=addId.id).one()
+                    filterProv = session.query(Provider).\
+                                filter_by(id=addId.provider_id).one()
+                    # ADD result to provider list
+                    provider.append(filterProv)
+                break
+            else:
+            # GET the next address object add from address table using parent_id
+                childAdd = session.query(Address).filter_by\
+                                    (id=childAdd.parent_id).one()
+
+
     if 'username' not in login_session:
-        return render_template('publicmain.html', provider=provider)
+        return render_template('publicmain.html', provider=provider,\
+                                governorate=governorate)
     else:
-        return render_template('main.html', provider=provider)
+        return render_template('main.html', provider=provider,\
+                                governorate=governorate)
 
 
 # 2 delete provider
@@ -289,11 +359,11 @@ def providerService(provider_id):
     # GET provider add from provider_add table
     provadd = session.query(ProviderAdd).filter_by\
                                         (provider_id=provider_id).one()
-    # GET array of address objects while parent_id = 0
 
     # GET end of tree address object add from address table
     add = session.query(Address).filter_by(id=provadd.address_id).one()
     addDic = {}
+    # WHILE loop till parent_id = 0
     while True:
         # GET add type from add_type table
         addtype = session.query(AddType).filter_by(id=add.type_id).one()
