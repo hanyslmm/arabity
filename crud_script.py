@@ -28,7 +28,7 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
 # read csv file create DataFrame sheet
-sheet = pd.read_csv('/Users/macbookpro/projects/arabity/areasheet.csv')
+sheet = pd.read_csv('/Users/macbookpro/projects/arabity/5krecord.csv')
 # create variable counter count all rows in the csv
 row_counter = sheet.shape[0]
 row_counter = int(row_counter)
@@ -49,7 +49,8 @@ while i_row < row_counter:
     prov_mob = int(prov_mob)
     prov_tel = int(prov_tel)
     prov_user - int(prov_user)
-
+    print (prov_mob)
+    print (prov_tel)
     prov_exist = session.query(Provider.name).\
                     filter(Provider.name == prov_name).scalar()
     if prov_exist is None:
@@ -58,11 +59,6 @@ while i_row < row_counter:
         session.add(newprovider)
         session.commit()
 
-        # ADD provider address id
-        address = session.query(Address).filter_by(address=prov_gov).one()
-        prov_add = ProviderAdd(provider_id=newprovider.id, address_id=address.id)
-        session.add(prov_add)
-        session.commit()
 
         # ADD provider mobile
         mobile = Mobile(mob=prov_mob, provider_id=newprovider.id)
