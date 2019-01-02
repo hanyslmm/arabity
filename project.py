@@ -269,8 +269,7 @@ def providerFilter(filterGov):
     for addId in allAdd_id:
         childAdd = session.query(Address).filter_by\
                                         (id=addId.address_id).one()
-        print ("hablooooooooooooooooooooooo")
-        print (childAdd.address)
+
         # WHILE loop till parent_id = 0
         while True:
             # IF parent id = 0 check if governorate name = filterGov
