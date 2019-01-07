@@ -6,24 +6,18 @@ import numpy as np
 import pandas as pd
 
 # import all modules needed for configuration
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
-from database_setup_arabity import Base, Provider, User, UserType, Story
-from database_setup_arabity import Address, ProviderAdd, Telephone
-from database_setup_arabity import Mobile, AddType
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from database_setup_arabity import *
 
-
+# initializes an app variable, using the __name__ attribute
+app = Flask(__name__)
 
 # === let program know which database engine we want to communicate===
-engine = create_engine('sqlite:///arabity.db')
-
-# bind the engine to the Base class corresponding tables
-Base.metadata.bind = engine
-
-# create session maker object
-DBSession = sessionmaker(bind = engine)
-session = DBSession()
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
 # READ csv file create DataFrame df
 df = pd.read_csv('/Users/macbookpro/projects/arabity/addtype.csv')
@@ -37,14 +31,14 @@ i_row = 0
 while i_row < row_counter:
     # GIT type for address add_type
     add_type = df.loc[df.index[i_row], 'Type']
-    type = session.query(AddType).\
-              filter(AddType.name==add_type).scalar()
+    type = AddType.query.filter_by(name=add_type).scalar()
     if type is None:
         # ADD type to add_type table
         newtype = AddType(name=add_type)
-        session.add(newtype)
-        session.commit()
+        db.session.add(newtype)
     else:
         # type already exist so do nothing
-        print ("type already exist")
+        print ("{} type already exist".format(type.name))
     i_row += 1
+db.session.commit()
+print ("address types added Successfully")

@@ -4,12 +4,11 @@ from flask import url_for, flash, jsonify
 from flask import session as login_session  # dictionary store values in it
 import random  # to create a pseudo-random string identify each login session
 import string
-# import all modules needed for sqlalchemy configuration
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from database_setup_arabity import Base, User, Provider
-from database_setup_arabity import UserType, Story, AddType
-from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
+# import all modules needed for configuration
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from database_setup_arabity import *
 # google OAuth
 from oauth2client.client import flow_from_clientsecrets  # creates flow object
 from oauth2client.client import FlowExchangeError
@@ -27,18 +26,10 @@ APPLICATION_NAME = "arabity"
 # initializes an app variable, using the __name__ attribute
 app = Flask(__name__)
 
-# let program know which database engine we want to communicate
-engine = create_engine('sqlite:///arabity.db',
-                       connect_args={'check_same_thread': False},
-                       echo=True, convert_unicode=True)
-# bind the engine to the Base class corresponding tables
-Base.metadata.bind = engine
-
-# create session maker object
-DBSession = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                           bind=engine))
-session = DBSession()
-
+# === let program know which database engine we want to communicate===
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
 # User helper functions
 def createUser(login_session):
@@ -220,55 +211,29 @@ def gdisconnect():
 @app.route('/')
 @app.route('/provider')
 def providerName():
-    provider = session.query(Provider).all()
-    governorate = session.query(Address).filter_by(parent_id=0).all()
-    try:
-        if filterGov in locals():
-            print ("hablooooooooooooooooooooooo")
-            print ("hablooooooooooooooooooooooo")
-            # create array of objects for all records in provider_add table
-            allAdd = session.query(ProviderAdd).all()
-            provider = []
-            # FOR loop till parent_id = 0
-            for add in allAdd:
-                add_id = session.query(Address).filter_by(id=add.address_id).one()
-                # WHILE loop till parent_id = 0
-                while True:
-                    # IF parent id = 0 check if governorate name = filterGov
-                    if add.parent_id == 0:
-                        if add.address == filterGov:
-                            filterProv = session.query(Provider).\
-                                                filter_by(id=add.provider_id).one()
-                            # ADD result to provider list
-                            provider.append(filterProv)
-                    # GET the next address object add from address table using parent_id
-                    add = session.query(Address).filter_by(id=add.parent_id).one()
-    except:
-
-
-
-        if 'username' not in login_session:
-            return render_template('publicmain.html', provider=provider,\
-                                    governorate=governorate)
-        else:
-            return render_template('main.html', provider=provider,\
-                                    governorate=governorate)
+    provider = Provider.query.all()
+    governorate = Address.query.filter_by(parent_id=0).all()
+    #governorate = session.query(Address).filter_by(parent_id=0).all()
+    if 'username' not in login_session:
+        return render_template('publicmain.html', provider=provider,\
+                                governorate=governorate)
+    else:
+        return render_template('main.html', provider=provider,\
+                                governorate=governorate)
 
 
 # FILTER provider
 @app.route('/provider/<string:filterGov>', methods=['GET', 'POST'])
 def providerFilter(filterGov):
-    provider = session.query(Provider).all()
-    print (type(provider))
-    governorate = session.query(Address).filter_by(parent_id=0).all()
+    provider = Provider.query.all()
+    governorate = Address.query.filter_by(parent_id=0).all()
     provider = []
     # create array of objects for all records in provider_add table
-    allAdd_id = session.query(ProviderAdd).all()
+    allAdd_id = ProviderAdd.query.all()
     # FOR loop till parent_id = 0
 
     for addId in allAdd_id:
-        childAdd = session.query(Address).filter_by\
-                                        (id=addId.address_id).one()
+        childAdd = Address.query.filter_by(id=addId.address_id).one()
 
         # WHILE loop till parent_id = 0
         while True:
@@ -277,15 +242,14 @@ def providerFilter(filterGov):
                 if childAdd.address == filterGov:
                 #    filterAdd = session.query(ProviderAdd).\
                 #                filter_by(address_id=addId.id).one()
-                    filterProv = session.query(Provider).\
-                                filter_by(id=addId.provider_id).one()
+                    filterProv = Provider.query.filter_by(id=addId.provider_id)\
+                                                            .one()
                     # ADD result to provider list
                     provider.append(filterProv)
                 break
             else:
             # GET the next address object add from address table using parent_id
-                childAdd = session.query(Address).filter_by\
-                                    (id=childAdd.parent_id).one()
+                childAdd = Address.query.filter_by(id=childAdd.parent_id).one()
 
 
     if 'username' not in login_session:

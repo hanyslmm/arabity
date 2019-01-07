@@ -1,31 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import random
 
-# used to manipulate diff parts of py run-time env.
-import sys
-import datetime
-import os
+# import pandas
 import numpy as np
 import pandas as pd
 
 # import all modules needed for configuration
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
-from database_setup_arabity import Base, Provider, User, UserType, Story
-from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
-from flask import jsonify
-import json
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from database_setup_arabity import *
 
+# initializes an app variable, using the __name__ attribute
+app = Flask(__name__)
 
 # === let program know which database engine we want to communicate===
-engine = create_engine('sqlite:///arabity.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
-# bind the engine to the Base class corresponding tables
-Base.metadata.bind = engine
-
-# create session maker object
-DBSession = sessionmaker(bind = engine)
-session = DBSession()
 
 # read csv file create DataFrame sheet
 sheet = pd.read_csv('/Users/macbookpro/projects/arabity/5krecord.csv')
@@ -48,27 +42,27 @@ while i_row < row_counter:
     prov_user = sheet.loc[sheet.index[i_row], 'User']
     prov_mob = int(prov_mob)
     prov_tel = int(prov_tel)
-    prov_user - int(prov_user)
+    prov_user = int(prov_user)
+    prov_username = prov_name + str(random.randint(1,1000))
     print (prov_mob)
     print (prov_tel)
-    prov_exist = session.query(Provider.name).\
-                    filter(Provider.name == prov_name).scalar()
+    prov_exist = Provider.query.filter_by(username=prov_username).scalar()
     if prov_exist is None:
         # ADD new provider with name and logo
-        newprovider = Provider(name=prov_name, logo=prov_logo, user_id=3)
-        session.add(newprovider)
-        session.commit()
-
+        newprovider = Provider(name=prov_name, username=prov_username\
+                                ,logo=prov_logo, user_id=3)
+        db.session.add(newprovider)
+        db.session.commit()
 
         # ADD provider mobile
         mobile = Mobile(mob=prov_mob, provider_id=newprovider.id)
-        session.add(mobile)
-        session.commit()
+        db.session.add(mobile)
+        db.session.commit()
 
         # ADD provider telephone
         telephone = Telephone(tel=prov_tel, provider_id=newprovider.id)
-        session.add(telephone)
-        session.commit()
+        db.session.add(telephone)
+        db.session.commit()
     else:
         print ("provider name {} already exist".format(prov_exist))
     i_row += 1
