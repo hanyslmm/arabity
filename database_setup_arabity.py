@@ -2,277 +2,226 @@
 import sys
 import datetime
 import os
-# import all modules needed for configuration
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
-# base instance inherit all features of SQLAlchemy
-Base = declarative_base()
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+# initializes an app variable, using the __name__ attribute
+app = Flask(__name__)
+
+# let program know which database db.Model engine we want to communicate
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
 
-# add usertype class definition code for usertype table
-class UserType(Base):
-    __tablename__ = 'usertype'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
-
-
-# add class definition code and mapper for user table
-class User(Base):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    email = Column(String(250), nullable=False)
-    picture = Column(String(250))
-    user_type = Column(Integer, ForeignKey('usertype.id'), nullable=False)
-    usertype = relationship(UserType)
+# ADD user_type class definition code for user_type table
+class UserType(db.Model): #change user_type table to user_table
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    users = db.relationship('User', backref='user_id')
 
 
-class Provider(Base):
-    __tablename__ = 'provider'
-
-# provider table mapper
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
-    logo = Column(String(250), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    user = relationship(User)
-    provider_add = relationship("ProviderAdd", cascade="all, delete-orphan")
-    telephone = relationship("Telephone", cascade="all, delete-orphan")
-    mobile = relationship("Mobile", cascade="all, delete-orphan")
-    location = relationship("Location", cascade="all, delete-orphan")
-    provider_brand = relationship("ProviderBrand", cascade="all, delete-orphan")
-    provider_service = relationship("ProviderService", cascade="all, delete-orphan")
-    provider_verification = relationship("ProviderVerification", cascade="all, delete-orphan")
-    story = relationship("Story", cascade="all, delete-orphan")
-    social_link = relationship("SocialLink", cascade="all, delete-orphan")
-    provider_tag = relationship("ProviderTag", cascade="all, delete-orphan")
-    provider_extra = relationship("ProviderExtra", cascade="all, delete-orphan")
-
-
-# add AddType class definition code for add_type table
-class AddType(Base):
-    __tablename__ = 'add_type'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
-
-
-# Address class definition code
-class Address(Base):
-    __tablename__ = 'address'
-
-# address table mapper
-    id = Column(Integer, primary_key=True)
-    address = Column(String(80), nullable=False)
-    parent_id = Column(Integer, nullable=False)
-    type_id = Column(Integer, ForeignKey('add_type.id'), nullable=False)
-    add_type = relationship(AddType)
-
-
-# ProviderAdd class definition code
-class ProviderAdd(Base):
-    __tablename__ = 'provider_add'
-
-# provider_add table mapper
-    id = Column(Integer, primary_key=True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    address_id = Column(Integer, ForeignKey('address.id'), nullable=False)
-    address = relationship(Address)
-
-
-# Telephone class definition code
-class Telephone(Base):
-    __tablename__ = 'telephone'
-
-# telephone table mapper
-    id = Column(Integer, primary_key=True)
-    tel = Column(String(20), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
+# ADD class definition code and mapper for user table
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(20), nullable=False)
+    picture = db.Column(db.String(250))
+    user_type = db.Column(db.Integer, db.ForeignKey('user_type.id'),\
+                            nullable=False)
 
 
 # Mobile class definition code
-class Mobile(Base):
-    __tablename__ = 'mobile'
-
-# mobile table mapper
-    id = Column(Integer, primary_key=True)
-    mob = Column(String(20), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
+class Mobile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mob = db.Column(db.String(20), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
 
 
-# Location class definition code
-class Location(Base):
-    __tablename__ = 'location'
+# Telephone class definition code telephone
+class Telephone(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tel = db.Column(db.String(20), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
 
-# location table mapper
-    id = Column(Integer, primary_key=True)
-    loc = Column(String(250), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
+
+# PROVIDERADD class definition code provider_add
+class ProviderAdd(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
 
 
 # Brand class definition code
-class Brand(Base):
-    __tablename__ = 'brand'
-
-# brand table mapper
-    id = Column(Integer, primary_key=True)
-    brand = Column(String(20), nullable=False)
-    parent_id = Column(Integer, nullable=False)
-
-
-# ProviderBrand class definition code
-class ProviderBrand(Base):
-    __tablename__ = 'provider_brand'
-
-# provider_brand table mapper
-    id = Column(Integer, primary_key=True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    brand_id = Column(Integer, ForeignKey('brand.id'), nullable=False)
-    brand = relationship(Brand)
-
-
-# Service class definition code
-class Service(Base):
-    __tablename__ = 'service'
-
-# service table mapper
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
-
-
-# ProviderService class definition code
-class ProviderService(Base):
-    __tablename__ = 'provider_service'
-
-# provider_service table mapper
-    id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    service_id = Column(Integer, ForeignKey('service.id'), nullable=False)
-    service = relationship(Service)
-
-
-# Verification class definition code
-class Verification(Base):
-    __tablename__ = 'verification'
-
-# verification table mapper
-    id = Column(Integer, primary_key=True)
-    verify = Column(String(20), nullable=False)
-
-
-# ProviderVerification class definition code
-class ProviderVerification(Base):
-    __tablename__ = 'provider_verification'
-
-# provider_verification table mapper
-    id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    verification_id = Column(Integer, ForeignKey('verification.id'),
-                             nullable=False)
-    verification = relationship(Verification)
+class Brand(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    brand = db.Column(db.String(20), nullable=False)
+    parent_id = db.Column(db.Integer, nullable=False)
 
 
 # Story class definition code
-class Story(Base):
-    __tablename__ = 'story'
+class Story(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    post = db.Column(db.String(250), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship(User)
 
-# story table mapper
-    id = Column(Integer, primary_key = True)
-    post = Column(String(250), nullable=False)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    user = relationship(User)
 
-# SocialType class definition code
-class SocialType(Base):
-    __tablename__ = 'socialtype'
+# PROVIDER table mapper
+class Provider(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    logo = db.Column(db.String(250), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship(User)
+    # DEFINE relationship with mobile table
+    mobiles = db.relationship('Mobile', backref='mobile')
+    # DEFINE relationship with telephone table
+    telephones = db.relationship('Telephone', backref='telephone')
+    # DEFINE relationship with story table
+    stories = db.relationship('Story', backref='story')
+    # DEFINE relationship with provider_add table
+    address = db.relationship('ProviderAdd', backref='address')
+    # DEFINE relationship with provider_brand table
+    brands = db.relationship('ProviderBrand', backref='brand')
+    # DELETE all orphans incase deleting any provider
+    provider_add = db.relationship("ProviderAdd", cascade="all, delete-orphan")
+    telephone = db.relationship("Telephone", cascade="all, delete-orphan")
+    mobile = db.relationship("Mobile", cascade="all, delete-orphan")
+    provider_brand = db.relationship("ProviderBrand", cascade="all, delete-orphan")
+    story = db.relationship("Story", cascade="all, delete-orphan")
 
-# socialtype table mapper
-    id = Column(Integer, primary_key=True)
-    type = Column(String(20), nullable=False)
-    logo = Column(String(250), nullable=False)
+"""    location = db.relationship("Location", cascade="all, delete-orphan")
+    provider_service = db.relationship("ProviderService", cascade="all, delete-orphan")
+    provider_verification = db.relationship("ProviderVerification", cascade="all, delete-orphan")
+    social_link = db.relationship("SocialLink", cascade="all, delete-orphan")
+    provider_tag = db.relationship("ProviderTag", cascade="all, delete-orphan")
+    provider_extra = db.relationship("ProviderExtra", cascade="all, delete-orphan")"""
+
+
+# ADD AddType class definition code for add_type table
+class AddType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+
+
+# ADDREESS class definition code
+class Address(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(80), nullable=False)
+    parent_id = db.Column(db.Integer, nullable=False)
+    address = db.relationship('ProviderAdd', backref='address')
+    type_id = db.Column(db.Integer, db.ForeignKey('add_type.id'), nullable=False)
+    add_type = db.relationship(AddType)
+
+
+# ProviderBrand class definition code
+class ProviderBrand(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id'), nullable=False)
+    brand = db.relationship(Brand)
+
+
+"""# Location class definition code
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    loc = db.Column(db.String(250), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)"""
+
+
+"""# Service class definition code
+class Service(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+
+
+# ProviderService class definition code
+class ProviderService(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
+    service = db.relationship(Service)"""
+
+
+"""# Verification class definition code
+class Verification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    verify = db.Column(db.String(20), nullable=False)
+
+
+# ProviderVerification class definition code
+class ProviderVerification(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    verification_id = db.Column(db.Integer, db.ForeignKey('verification.id'),
+                             nullable=False)
+    verification = db.relationship(Verification)"""
+
+
+"""# SocialType class definition code
+class SocialType(db.Model): #change socialtable to social_table
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(20), nullable=False)
+    logo = db.Column(db.String(250), nullable=False)
 
 
 # SocialLink class definition code
-class SocialLink(Base):
-    __tablename__ = 'social_link'
-
-# social_link table mapper
-    id = Column(Integer, primary_key = True)
-    link = Column(String(250), nullable=False)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    socialtype_id = Column(Integer, ForeignKey('socialtype.id'), nullable=False)
-    socialtype = relationship(SocialType)
+class SocialLink(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    link = db.Column(db.String(250), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    social_id = db.Column(db.Integer, db.ForeignKey('social_type.id'), nullable=False)
+    social_type = db.relationship(SocialType)"""
 
 
-# Tag class definition code
-class Tag(Base):
-    __tablename__ = 'tag'
-
-# tag table mapper
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
+"""# Tag class definition code
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
 
 
 # ProviderTag class definition code
-class ProviderTag(Base):
-    __tablename__ = 'provider_tag'
-
-# provider_teg table mapper
-    id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    tag_id = Column(Integer, ForeignKey('tag.id'), nullable=False)
-    tag = relationship(Tag)
+class ProviderTag(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'), nullable=False)
+    tag = db.relationship(Tag)"""
 
 
-# Extra class definition code
-class Extra(Base):
-    __tablename__ = 'extra'
-
-# extra table mapper
-    id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
+"""# Extra class definition code
+class Extra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
 
 
 # ProviderExtra class definition code
-class ProviderExtra(Base):
-    __tablename__ = 'provider_extra'
-
-# provider_extra table mapper
-    id = Column(Integer, primary_key = True)
-    provider_id = Column(Integer, ForeignKey('provider.id'), nullable=False)
-    provider = relationship(Provider)
-    extra_id = Column(Integer, ForeignKey('extra.id'), nullable=False)
-    extra = relationship(Extra)
+class ProviderExtra(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
+    provider = db.relationship(Provider)
+    extra_id = db.Column(db.Integer, db.ForeignKey('extra.id'), nullable=False)
+    extra = db.relationship(Extra)"""
 
 
 
 # === to connect to an existing db or create a new one ===
-engine = create_engine('sqlite:///arabity.db')
-Base.metadata.create_all(engine)
+db.create_all()
 print("connected to arabity database")
 
 if __name__ == '__main__':
-    # fill usertype table with Admin and Normal
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
+    # fill user_type table with Admin and Normal
     normal = UserType(name='normal')
-    session.add(normal)
+    db.session.add(normal)
     admin = UserType(name='admin')
-    session.add(admin)
-    session.commit()
+    db.session.add(admin)
+    db.session.commit()
