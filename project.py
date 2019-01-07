@@ -39,18 +39,18 @@ def createUser(login_session):
                    user_type=1)
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
+    user = User.query.filter_by(email=login_session['email']).one()
     return user.id
 
 
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
+    user = User.query.filter_by(id=user_id).one()
     return user  # user object associated with his ID number
 
 
 def getUserID(email):
     try:
-        user = session.query(User).filter_by(email=email).one()
+        user = User.query.filter_by(email=email).one()
         return user.id
     except:
         return None
@@ -263,7 +263,7 @@ def providerFilter(filterGov):
 # 2 delete provider
 @app.route('/provider/<int:provider_id>/delete', methods=['GET', 'POST'])
 def providerDelete(provider_id):
-    deletedProvider = session.query(Provider).filter_by(id=provider_id).one()
+    deletedProvider = Provider.query.filter_by(id=provider_id).one()
     # verify that a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
@@ -272,8 +272,8 @@ def providerDelete(provider_id):
         output += " to delete this Provider.');}</script>"
         return output
     if request.method == 'POST':
-        session.delete(deletedProvider)
-        session.commit()
+        db.session.delete(deletedProvider)
+        db.session.commit()
         # using flash to make interaction with user
         flash("{} Provider Deleted!".format(deletedProvider.name))
         return redirect(url_for('providerName'))
@@ -289,22 +289,22 @@ def newProvider():
     # verify that a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
-    governorate = session.query(Address).filter_by(parent_id=0).all()
+    governorate = Address.query.filter_by(parent_id).all()
     if request.method == 'POST':
         newprovider = Provider(name=request.form['name'], logo=request.form['logo'],
                                    user_id=login_session['user_id'])
-        session.add(newprovider)
-        session.commit()
+        db.session.add(newprovider)
+        db.session.commit()
         newmobile = Mobile(mob=request.form['mobile'], provider_id=newprovider.id)
         newtelephone = Telephone(tel=request.form['telephone'],\
                                     provider_id=newprovider.id)
-        session.add(newmobile)
-        session.add(newtelephone)
-        session.commit()
+        db.session.add(newmobile)
+        db.session.add(newtelephone)
+        db.session.commit()
         gov = session.query(Address).filter_by(address=request.form['gov']).one()
         newadd = ProviderAdd(provider_id=newprovider.id, address_id=gov.id)
-        session.add(newadd)
-        session.commit()
+        db.session.add(newadd)
+        db.session.commit()
         return redirect(url_for('providerName'))
     else:
         return render_template('newprovider.html', governorate=governorate)
@@ -314,28 +314,27 @@ def newProvider():
 @app.route('/provider/<int:provider_id>/service')
 @app.route('/provider/<int:provider_id>/')
 def providerService(provider_id):
-    provider = session.query(Provider).filter_by(id=provider_id).one()
-    mobile = session.query(Mobile).filter_by(provider_id=provider.id)
-    telephone = session.query(Telephone).filter_by(provider_id=provider.id)
-    story = session.query(Story).filter_by(provider_id=provider.id)
+    provider = Provider.query.filter_by(id=provider_id).one()
+    mobile = Mobile.query.filter_by(provider_id=provider.id)
+    telephone = Telephone.query.filter_by(provider_id=provider.id)
+    story = Story.query.filter_by(provider_id=provider.id)
     creator = getUserInfo(provider.user_id)
     # GET provider add from provider_add table
-    provadd = session.query(ProviderAdd).filter_by\
-                                        (provider_id=provider_id).one()
+    provadd = provider_add.query.filter_by(provider_id=provider.id)
 
     # GET end of tree address object add from address table
-    add = session.query(Address).filter_by(id=provadd.address_id).one()
+    add = Address.query.filter_by(id=provadd.address_id).one()
     addDic = {}
     # WHILE loop till parent_id = 0
     while True:
         # GET add type from add_type table
-        addtype = session.query(AddType).filter_by(id=add.type_id).one()
+        addtype = AddType.query.filter_by(id=add.type_id).one()
         # SAVE address in dictionary
         addDic[addtype.name]=add.address
         if add.parent_id == 0:
             break
         # GET the next address object add from address table using parent_id
-        add = session.query(Address).filter_by(id=add.parent_id).one()
+        add = Address.query.filter_by(id=add.parent_id).one()
 
 
     # ANOTHER method addDict.__setitem__(addtype, add)

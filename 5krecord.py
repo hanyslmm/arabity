@@ -6,22 +6,18 @@ import numpy as np
 import pandas as pd
 
 # import all modules needed for configuration
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
-from database_setup_arabity import Base, Provider, User, UserType, Story
-from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from database_setup_arabity import *
 
-
+# initializes an app variable, using the __name__ attribute
+app = Flask(__name__)
 
 # === let program know which database engine we want to communicate===
-engine = create_engine('sqlite:///arabity.db')
-
-# bind the engine to the Base class corresponding tables
-Base.metadata.bind = engine
-
-# create session maker object
-DBSession = sessionmaker(bind = engine)
-session = DBSession()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
 
 # READ csv file create DataFrame sheet
@@ -42,34 +38,27 @@ while i_row < row_counter:
     print (prov_gov)
     prov_area = sheet.loc[sheet.index[i_row], 'Area']
     prov_name = sheet.loc[sheet.index[i_row], 'Name']
-    gov_address = session.query(Address).\
-              filter(Address.address == prov_gov).scalar()
+    gov_address = Address.query.filter_by(parent_id=0,\
+                                            address=prov_gov).scalar()
     if gov_address is None:
         # ADD new governorate name to address table
-        add = Address(address=prov_gov, parent_id=0, type_id=2)
-        session.add(add)
-        session.commit()
+        gov_address = Address(address=prov_gov, parent_id=0, type_id=2)
+        db.session.add(add)
+        db.session.commit()
     # SEARCH for area address in address table
-    area_address = session.query(Address).\
-              filter(Address.address == prov_area).scalar()
+    area_address = Address.query.filter_by(address=prov_area).scalar()
     if area_address is None:
         # GIT governorate id which is parent id for area
-        gov_id = session.query(Address.id).\
-                  filter(Address.address == prov_gov).scalar()
+        gov_id = gov_address.id
         # ADD area to address table
         area_address = Address(address=prov_area, parent_id=gov_id, type_id=3)
-        session.add(area_address)
-        session.commit()
+        db.session.add(area_address)
+        db.session.commit()
     # ASSIGN address to provider_id in provider_add table
     print ("hablooooooooooooooooooooooo")
-    print (prov_name)
-    prov_id = session.query(Provider.id).\
-                  filter(Provider.name == prov_name).scalar()
-    print (prov_id)
-    area_id = session.query(Address.id).\
-              filter(Address.address == prov_area).scalar()
-    prov_address = session.query(ProviderAdd).\
-                    filter(ProviderAdd.provider_id == prov_id).scalar()
+    prov_id = Provider.query.filter_by(name=prov_name).one()
+    area_id = area_address.id
+    prov_address = ProviderAdd.query.filter_by(provider_id == prov_id).scalar()
     if prov_address is None:
         prov_address = ProviderAdd(provider_id=prov_id,\
                         address_id=area_id)
@@ -77,8 +66,6 @@ while i_row < row_counter:
         session.commit()
     else:
         # address already exist so update with new value
-        prov_address = session.query(ProviderAdd).\
-                        filter_by(provider_id=prov_id).one()
         prov_address.address_id = area_id
         session.add(prov_address)
         session.commit()

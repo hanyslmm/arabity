@@ -6,22 +6,18 @@ import numpy as np
 import pandas as pd
 
 # import all modules needed for configuration
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
-from database_setup_arabity import Base, Provider, User, UserType, Story
-from database_setup_arabity import Address, ProviderAdd, Telephone, Mobile
+# IMPORT flask and sqlalchemy
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from database_setup_arabity import *
 
-
+# initializes an app variable, using the __name__ attribute
+app = Flask(__name__)
 
 # === let program know which database engine we want to communicate===
-engine = create_engine('sqlite:///arabity.db')
-
-# bind the engine to the Base class corresponding tables
-Base.metadata.bind = engine
-
-# create session maker object
-DBSession = sessionmaker(bind = engine)
-session = DBSession()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
+db = SQLAlchemy(app)
 
 
 # READ csv file create DataFrame sheet
@@ -36,13 +32,13 @@ i_row = 0
 while i_row < row_counter:
     prov_area = sheet.loc[sheet.index[i_row], 'Area']
     prov_name = sheet.loc[sheet.index[i_row], 'Name']
-    area_address = session.query(Address).\
+    area_address = Address.query.filter_by()
+    session.query(Address).\
               filter(Address.address == prov_area).scalar()
     if area_address is None:
         # GIT governorate id which is parent id for area
         prov_gov = sheet.loc[sheet.index[i_row], 'Gov']
-        gov_id = session.query(Address.id).\
-                  filter(Address.address == prov_gov).scalar()
+        gov_id = Address.query.filter_by(parent_id=0, address=prov_gov).one()
         # ADD area to address table
         area_address = Address(address=prov_area, parent_id=gov_id, type_id=3)
         session.add(area_address)
