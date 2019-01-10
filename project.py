@@ -210,6 +210,7 @@ def gdisconnect():
 
 # 1 list all service provider name
 @app.route('/')
+@app.route('/provider')
 @app.route('/provider/<int:page_num>')
 def providerName(page_num=1):
     # construct a pagination object for all provider
