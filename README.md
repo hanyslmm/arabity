@@ -1,5 +1,16 @@
 # Resources:
 
+## Pagination in SQLALchemy-Flask:
+
+http://flask-sqlalchemy.pocoo.org/2.1/api/#flask.ext.sqlalchemy.SQLAlchemy
+
+https://www.youtube.com/watch?v=hkL9pgCJPNk
+
+
+## SQLAlchemy commit(), flush(), expire(), refresh(), merge() - what's the difference?
+
+https://www.michaelcho.me/article/sqlalchemy-commit-flush-expire-refresh-merge-whats-the-difference
+
 ## How to Find Duplicate Values in a SQL Table:
 
 https://chartio.com/learn/databases/how-to-find-duplicate-values-in-a-sql-table/

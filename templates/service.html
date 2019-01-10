@@ -91,9 +91,10 @@
       <div class="row container-fluid responsive" style="padding: 20px;
            border: 3px solid #ccc">
        <h3>Mobile num:</h3>
+       </br>
        {% for i in mobile %}
         <p>{{i.mob}}</p>
-      </br>
+        </br>
         <button type="button" class="btn btn-xs pull-left">
           <a href='{{url_for('editService', provider_id = provider.id,
               service_id = 1, idItem=i.id) }}'>Edit mobile</a>
@@ -102,15 +103,14 @@
           <a href='{{url_for('deleteService', provider_id = provider.id,
               service_id = 1, idItem=i.id) }}'>Delete mobile</a>
         </button>
+        </br></br>
+      {% endfor %}
       </br>
       </div>
-      {% endfor %}
-        </br>
-        </br>
-
       <div class="row container-fluid responsive" style="padding: 20px;
             border: 3px solid #ccc">
         <h3>telephone num:</h3>
+        </br>
         {% for i in telephone %}
         <p>{{i.tel}}</p>
       </br>
@@ -122,21 +122,23 @@
           <a href='{{url_for('deleteService', provider_id = provider.id,
               service_id = 2, idItem=i.id) }}'>Delete telephone</a>
         </button>
+        </br>
+        </br>
+        {% endfor %}
       </br>
       </div>
-      {% endfor %}
-        </br>
-        </br>
-      <h3>visitors story:</h3>
-      {% for i in story %}
+
       <div class="row container-fluid responsive" style="padding: 20px;
            border: 3px solid #ccc">
+           <h3>visitors story:</h3>
+           </br>
+           {% for i in story %}
         <p>{{i.post}}</p>
         <p>Added at: {{i.timestamp}}</p>
         <p><strong>Added by: {{i.user_id}}</strong></p>
           </br>
+            {% endfor %}
       </div>
-      {% endfor %}
     </br>
     <button type="button" class="btn btn-xs pull-left">
       <a href='{{url_for('newStory', provider_id=provider.id) }}'>Add your story</a>

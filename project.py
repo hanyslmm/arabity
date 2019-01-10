@@ -9,6 +9,7 @@ import string
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from database_setup_arabity import *
+from database_setup_arabity import db
 # google OAuth
 from oauth2client.client import flow_from_clientsecrets  # creates flow object
 from oauth2client.client import FlowExchangeError
@@ -25,11 +26,11 @@ APPLICATION_NAME = "arabity"
 
 # initializes an app variable, using the __name__ attribute
 app = Flask(__name__)
+db.init_app(app)
 
 # === let program know which database engine we want to communicate===
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
-db = SQLAlchemy(app)
 
 # User helper functions
 def createUser(login_session):
@@ -37,8 +38,8 @@ def createUser(login_session):
                    email=login_session['email'],
                    picture=login_session['picture'],
                    user_type=1)
-    session.add(newUser)
-    session.commit()
+    db.session.add(newUser)
+    db.session.commit()
     user = User.query.filter_by(email=login_session['email']).one()
     return user.id
 
@@ -209,11 +210,12 @@ def gdisconnect():
 
 # 1 list all service provider name
 @app.route('/')
-@app.route('/provider')
-def providerName():
-    provider = Provider.query.all()
+@app.route('/provider/<int:page_num>')
+def providerName(page_num=1):
+    # construct a pagination object for all provider
+    provider = Provider.query.paginate(per_page=12, page=page_num,\
+                                        error_out=True)
     governorate = Address.query.filter_by(parent_id=0).all()
-    #governorate = session.query(Address).filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return render_template('publicmain.html', provider=provider,\
                                 governorate=governorate)
@@ -275,7 +277,7 @@ def providerDelete(provider_id):
         db.session.delete(deletedProvider)
         db.session.commit()
         # using flash to make interaction with user
-        flash("{} Provider Deleted!".format(deletedProvider.name))
+        flash("{} Provider Deleted!".format("hablo"))
         return redirect(url_for('providerName'))
     else:
         return render_template('deleteprovider.html',
@@ -289,9 +291,11 @@ def newProvider():
     # verify that a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
-    governorate = Address.query.filter_by(parent_id).all()
+    governorate = Address.query.filter_by(parent_id=0).all()
     if request.method == 'POST':
-        newprovider = Provider(name=request.form['name'], logo=request.form['logo'],
+        prov_username = request.form['name'] + str(random.randint(1,10000))
+        newprovider = Provider(name=request.form['name'], username=\
+                                    prov_username, logo=request.form['logo'],\
                                    user_id=login_session['user_id'])
         db.session.add(newprovider)
         db.session.commit()
@@ -301,7 +305,7 @@ def newProvider():
         db.session.add(newmobile)
         db.session.add(newtelephone)
         db.session.commit()
-        gov = session.query(Address).filter_by(address=request.form['gov']).one()
+        gov = Address.query.filter_by(address=request.form['gov']).one()
         newadd = ProviderAdd(provider_id=newprovider.id, address_id=gov.id)
         db.session.add(newadd)
         db.session.commit()
@@ -315,13 +319,13 @@ def newProvider():
 @app.route('/provider/<int:provider_id>/')
 def providerService(provider_id):
     provider = Provider.query.filter_by(id=provider_id).one()
-    mobile = Mobile.query.filter_by(provider_id=provider.id)
-    telephone = Telephone.query.filter_by(provider_id=provider.id)
-    story = Story.query.filter_by(provider_id=provider.id)
+    mobile = Mobile.query.filter_by(provider_id=provider.id).all()
+    telephone = Telephone.query.filter_by(provider_id=provider.id).all()
+    story = Story.query.filter_by(provider_id=provider.id).all()
     creator = getUserInfo(provider.user_id)
     # GET provider add from provider_add table
-    provadd = provider_add.query.filter_by(provider_id=provider.id)
-
+    provadd = ProviderAdd.query.filter_by(provider_id=provider.id).one()
+    print (provadd.provider_id)
     # GET end of tree address object add from address table
     add = Address.query.filter_by(id=provadd.address_id).one()
     addDic = {}
@@ -353,7 +357,7 @@ def providerService(provider_id):
 @app.route('/provider/<int:provider_id>/newStory/', methods=['GET', 'POST'])
 def newStory(provider_id):
     # verify that a user is logged in
-    provider = session.query(Provider).filter_by(id=provider_id).one()
+    provider = Provider.query.filter_by(id=provider_id).one()
     # creator = getUserInfo(provider.user_id)
     if 'username' not in login_session:
         return redirect('/login')
@@ -362,8 +366,8 @@ def newStory(provider_id):
         newStory = Story(provider_id=provider_id, user_id=user_id)
         if request.form['post']:
             newStory.post = request.form['post']
-        session.add(newStory)
-        session.commit()
+        db.session.add(newStory)
+        db.session.commit()
         flash("service story Created!")
         return redirect(url_for('providerService',
                         provider_id=provider_id, provider=provider))
@@ -376,9 +380,9 @@ def newStory(provider_id):
 @app.route('/provider/<int:provider_id>/new/', methods=['GET', 'POST'])
 def newService(provider_id):
     # verify that a user is logged in
-    provider = session.query(Provider).filter_by(id=provider_id).one()
+    provider = Provider.query.filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
-    governorate = session.query(Address).filter_by(parent_id=0).all()
+    governorate = Address.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
@@ -391,9 +395,9 @@ def newService(provider_id):
             newMob.mob = request.form['mobile']
         if request.form['telephone']:
             newTel.tel = request.form['telephone']
-        session.add(newMob)
-        session.add(newTel)
-        session.commit()
+        db.session.add(newMob)
+        db.session.add(newTel)
+        db.session.commit()
         flash("service items Created!")
         return redirect(url_for('providerService',
                         provider_id=provider_id, provider=provider))
@@ -407,47 +411,48 @@ def newService(provider_id):
            methods=['GET', 'POST'])
 def editService(provider_id, service_id, idItem):
     # verify that a user is logged in
-    provider = session.query(Provider).filter_by(id=provider_id).one()
+    provider = Provider.query.filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
-    governorate = session.query(Address).filter_by(parent_id=0).all()
+    governorate = Address.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
         return
         "<script>{alert('You are not authorized to edit this');}</script>"
-    if service_id == 1:
-        editedItem = session.query(Mobile).filter_by(id=idItem).one()
-    if service_id == 2:
-        editedItem = session.query(Telephone).filter_by(id=idItem).one()
-    if service_id == 3:
-        editedItem = session.query(ProviderAdd).filter_by(provider_id=provider.id).one()
     if request.method == 'POST':
         if service_id == 1:
-            editedItem = session.query(Mobile).filter_by(id=idItem).one()
+            editedItem = Mobile.query.filter_by(id=idItem).scalar()
             editedItem.mob = request.form['number']
             # to make interaction with user
             flash("{} number Added!".format(editedItem.mob))
+            db.session.commit()
             return redirect(url_for('providerService', provider_id=provider_id))
         #if service_id == 2:
             #editedItem = session.query(Telephone).filter_by(provider_id=provider_id)
                 #return redirect(url_for('providerService', provider_id=provider_id))
         if service_id == 2:
-            editedItem = session.query(Telephone).filter_by(id=idItem).one()
+            editedItem = Telephone.query.filter_by(id=idItem).scalar()
             editedItem.tel = request.form['number']
             # to make interaction with user
             flash("{} number Added!".format(editedItem.tel))
+            db.session.commit()
             return redirect(url_for('providerService', provider_id=provider_id))
         if service_id == 3:
-            addItem = session.query(Address).filter_by\
-                        (address=request.form['governorate']).one()
-            editedItem = session.query(ProviderAdd).filter_by\
+            addItem = Address.query.filter_by\
+                        (address=request.form['governorate']).scalar()
+            editedItem = ProviderAdd.query.filter_by\
                         (provider_id=provider.id).one()
             editedItem.address_id = addItem.id
             # to make interaction with user
             flash("{} address updated!".format(addItem.address))
+            db.session.commit()
             return redirect(url_for('providerService', provider_id=provider_id))
-        session.add(editedItem)
-        session.commit()
+    if service_id == 1:
+        editedItem = Mobile.query.filter_by(id=idItem).one()
+    if service_id == 2:
+        editedItem = Telephone.query.filter_by(id=idItem).one()
+    if service_id == 3:
+        editedItem = ProviderAdd.query.filter_by(provider_id=provider.id).one()
 
 
     else:
@@ -461,32 +466,35 @@ def editService(provider_id, service_id, idItem):
            methods=['GET', 'POST'])
 def deleteService(provider_id, service_id, idItem):
     # verify that a user is logged in
-    provider = session.query(Provider).filter_by(id=provider_id).one()
+    provider = Provider.query.filter_by(id=provider_id).one()
     creator = getUserInfo(provider.user_id)
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
         return
         "<script>{alert('You are not authorized to delete this');}</script>"
-    if service_id == 1:
-        deletedItem = session.query(Mobile).filter_by(id=idItem).one()
-    if service_id == 2:
-        deletedItem = session.query(Telephone).filter_by(id=idItem).one()
     if request.method == 'POST':
         if service_id == 1:
-            deletedItem = session.query(Mobile).filter_by(id=idItem).one()
-            session.delete(deletedItem)
-            session.commit()
-            # to make interaction with user
-            flash("{} provider number Deleted!".format(deletedItem.mob))
-            return redirect(url_for('providerService', provider_id=provider_id))
+            try:
+                Mobile.query.filter_by(id=idItem).delete()
+                db.session.commit()
+                # to make interaction with user
+                flash("{} provider number Deleted!")
+                return redirect(url_for('providerService', provider_id=provider_id))
+            except:
+                flash("{} provider number not found!")
+                return redirect(url_for('providerService', provider_id=provider_id))
+
         if service_id == 2:
-            deletedItem = session.query(Telephone).filter_by(id=idItem).one()
-            session.delete(deletedItem)
-            session.commit()
+            Telephone.query.filter_by(id=idItem).delete()
+            db.session.commit()
             # to make interaction with user
-            flash("{} provider number Deleted!".format(deletedItem.tel))
+            flash("{} provider number Deleted!")
             return redirect(url_for('providerService', provider_id=provider_id))
+    if service_id == 1:
+        deletedItem = Mobile.query.filter_by(id=idItem).one()
+    if service_id == 2:
+        deletedItem = Telephone.query.filter_by(id=idItem).one()
     else:
         return render_template('deleteservice.html',
                                    provider_id=provider_id,
