@@ -162,7 +162,7 @@
 	</nav>
 
   <div class="container">
-		{% for i in provider %}
+		{% for i in provider.items %}
 		<div class="col-md-3 pill-center" style="padding: 20px; border: 3px solid #ccc">
       <div class="col-md-6">
         <p><strong>{{i.id}}</strong></p>
@@ -179,6 +179,20 @@
 		</div>
 	  {% endfor %}
 	</div>
+
+  <div class="row jumbotron text-center">
+    <h3> Total number of pages {{ provider.pages }} </h3>
+    <h3> Current page number {{ provider.page }} </h3>
+    <a href="{{url_for('providerName', page_num=provider.prev_num)}}">previous page</a>
+  {% for page in provider.iter_pages(left_edge=3, right_edge=3) %}
+    {% if page %}
+    <a href="{{url_for('providerName', page_num=page)}}">{{ page }}</a>
+    {% else %}
+      ...
+    {% endif %}
+  {% endfor %}
+  <a href="{{url_for('providerName', page_num=provider.next_num)}}">next page</a>
+</div>
 
 </br>
 </br>
