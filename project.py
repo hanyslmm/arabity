@@ -253,7 +253,7 @@ def providerFilter(filterGov):
             else:
             # GET the next address object add from address table using parent_id
                 childAdd = Address.query.filter_by(id=childAdd.parent_id).one()
-    
+
 
     if 'username' not in login_session:
         return render_template('publicmain.html', provider=provider,\
