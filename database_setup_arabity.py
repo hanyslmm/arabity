@@ -29,6 +29,7 @@ class User(db.Model):
     email = db.Column(db.String(20), nullable=False)
     picture = db.Column(db.String(250))
     providers = db.relationship('Provider', backref='user')
+    stories = db.relationship('Story', backref='user')
     user_type = db.Column(db.Integer, db.ForeignKey('user_type.id'),\
                             nullable=False)
 
@@ -48,13 +49,13 @@ class Provider(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'),\
                             nullable=False)
     # DEFINE relationship with mobile table
-    mobiles = db.relationship('Mobile', cascade="all,delete", backref='mobile')
+    mobiles = db.relationship('Mobile', cascade="all,delete", backref='provider')
     # DEFINE relationship with telephone table
-    telephones = db.relationship('Telephone', cascade="all,delete", backref='telephone')
+    telephones = db.relationship('Telephone', cascade="all,delete", backref='provider')
     # DEFINE relationship with story table
-    stories = db.relationship('Story', cascade="all,delete", backref='story')
+    stories = db.relationship('Story', cascade="all,delete", backref='provider')
     # DEFINE relationship with provider_add table
-    address = db.relationship('ProviderAdd', cascade="all,delete", backref='address')
+    address = db.relationship('ProviderAdd', cascade="all,delete", backref='provider')
     # DEFINE relationship with provider_brand table many to many
     brands = db.relationship('Brand', secondary=provider_brand,\
                                 backref=db.backref('brands', lazy='dynamic'))
@@ -80,6 +81,8 @@ class ProviderAdd(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
     address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
+    gov_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
+    providers = db.relationship('Provider', backref='providerAdd')
 
 
 # ADDREESS class definition code
@@ -87,8 +90,6 @@ class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(80), nullable=False)
     parent_id = db.Column(db.Integer, nullable=False)
-    providers = db.relationship('ProviderAdd', cascade="all,delete",\
-                                    backref='provider')
     type_id = db.Column(db.Integer, db.ForeignKey('add_type.id'), nullable=False)
 
 # ADD AddType class definition code for add_type table
@@ -119,9 +120,7 @@ class Story(db.Model):
     post = db.Column(db.String(250), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
-    provider = db.relationship(Provider)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship(User)
 
 
 """    location = db.relationship("Location", cascade="all, delete-orphan")
