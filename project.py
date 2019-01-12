@@ -238,7 +238,6 @@ def providerFilter(filterGov, page_num=1):
     provider = []
     for i in providersId.items:
         provider.append(i.provider)
-        print (i.provider.name)
 
     if 'username' not in login_session:
         return render_template('publicmain.html', provider=provider,filterGov=filterGov,\
