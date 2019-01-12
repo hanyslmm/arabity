@@ -214,7 +214,7 @@ def gdisconnect():
 @app.route('/provider/<int:page_num>')
 def providerName(page_num=1):
     # construct a pagination object for all provider
-    provider = Provider.query.paginate(per_page=12, page=page_num,\
+    provider = Provider.query.order_by(Provider.name.desc()).paginate(per_page=12, page=page_num,\
                                         error_out=True)
     governorate = Address.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
@@ -225,10 +225,27 @@ def providerName(page_num=1):
                                 governorate=governorate)
 
 
-# FILTER provider
-@app.route('/provider/<string:filterGov>', methods=['GET', 'POST'])
-def providerFilter(filterGov):
-    filterGov = Address.query.filter_by(parent_id=0, address=filterGov).one()
+# FILTER provider by governorate
+@app.route('/provider/<string:filterGov>/')
+@app.route('/provider/<string:filterGov>/<int:page_num>')
+def providerFilter(filterGov, page_num=1):
+    governorate = Address.query.filter_by(parent_id=0).all()
+    filterGovOb = Address.query.filter_by(parent_id=0, address=filterGov).one()
+    providersId = ProviderAdd.query.filter_by(gov_id=filterGovOb.id).\
+                        paginate(per_page=12, page=page_num, error_out=True)
+
+    #provider = Provider.query.filter_by(providerAdd=providersAdd)
+    provider = []
+    for i in providersId.items:
+        provider.append(i.provider)
+        print (i.provider.name)
+
+    if 'username' not in login_session:
+        return render_template('publicmain.html', provider=provider,filterGov=filterGov,\
+                                governorate=governorate, providersId=providersId,)
+    else:
+        return render_template('main.html', provider=provider,filterGov=filterGov,\
+                                governorate=governorate, providersId=providersId)
     """
     paginated = Pagination(query_object, page=page, per_page=10)
     # construct a pagination object for all provider
@@ -243,7 +260,6 @@ def providerFilter(filterGov):
         provider = Provider.query.filter(Provider.id>8).paginate(per_page=12, page=page_num, error_out=True)
 
         governorate = Address.query.filter_by(parent_id=0).all()"""
-    return filterGov.address
 
 
 
