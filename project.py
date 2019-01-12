@@ -142,7 +142,6 @@ def callback():
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
-    print (data)
     # Store data that we are intersted in
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
