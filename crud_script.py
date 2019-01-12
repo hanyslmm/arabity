@@ -18,7 +18,7 @@ app = Flask(__name__)
 # === let program know which database engine we want to communicate===
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
-db = SQLAlchemy(app)
+db.init_app(app)
 
 
 # read csv file create DataFrame sheet
@@ -51,8 +51,6 @@ while i_row < row_counter:
     prov_gov = prov_gov[:-1]
     prov_gov = "".join(prov_gov)
     print (prov_gov)
-    gov_address = Address.query.filter_by(parent_id=0,\
-                                            address=prov_gov).scalar()
     prov_exist = Provider.query.filter_by(username=prov_username).scalar()
     if prov_exist is None:
         # ADD new provider with name and logo
@@ -62,15 +60,17 @@ while i_row < row_counter:
         db.session.commit()
 
         # ADD provider mobile
-        mobile = Mobile(mob=prov_mob, provider_id=newprovider.id)
+        mobile = Mobile(mob=prov_mob, provider=newprovider)
         db.session.add(mobile)
         db.session.commit()
 
         # ADD provider telephone
-        telephone = Telephone(tel=prov_tel, provider_id=newprovider.id)
+        telephone = Telephone(tel=prov_tel, provider=newprovider)
         db.session.add(telephone)
         db.session.commit()
     #-----------#
+        gov_address = Address.query.filter_by(parent_id=0,\
+                                            address=prov_gov).scalar()
         if gov_address is None:
             # ADD new governorate name to address table
             gov_address = Address(address=prov_gov, parent_id=0, type_id=2)
@@ -82,22 +82,25 @@ while i_row < row_counter:
             # GIT governorate id which is parent id for area
             gov_id = gov_address.id
             # ADD area to address table
-            area_address = Address(address=prov_area, parent_id=gov_id, type_id=3)
+            area_address = Address(address=prov_area, parent_id=gov_id,\
+                                        type_id=3)
             db.session.add(area_address)
             db.session.commit()
             # ASSIGN address to provider_id in provider_add table
             print ("hablooooooooooooooooooooooo")
         prov_id = newprovider.id
         area_id = area_address.id
+        gov_id = gov_address.id
         prov_address = ProviderAdd.query.filter_by(provider_id=prov_id).scalar()
         if prov_address is None:
-            prov_address = ProviderAdd(provider_id=prov_id,\
-                            address_id=area_id)
+            prov_address = ProviderAdd(provider=newprovider,\
+                            address_id=area_id, gov_id=gov_id)
             db.session.add(prov_address)
             db.session.commit()
         else:
             # address already exist so update with new value
             prov_address.address_id = area_id
+            prov_address.gov_id = gov_id
             db.session.add(prov_address)
             db.session.commit()
     else:

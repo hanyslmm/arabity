@@ -13,11 +13,12 @@ from database_setup_arabity import *
 
 # initializes an app variable, using the __name__ attribute
 app = Flask(__name__)
+db.init_app(app)
 
 # === let program know which database engine we want to communicate===
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
-db = SQLAlchemy(app)
+
 
 
 # READ csv file create DataFrame sheet
