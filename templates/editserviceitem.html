@@ -91,25 +91,41 @@
               </button>
             </form>
           {% elif service_id == 3 %}
-          <form action="{{url_for('editService', provider_id=provider_id,
-                          service_id=3, idItem=1)}}" method = 'POST'>
-            <p>choose another governorate:</p>
-            <div class="container container-fluid responsive">
-              <select name="governorate">
-              {% for i in governorate %}
-              <option value={{i.address}}>{{i.address}}</option>
-              
-              {% endfor %}
-              </select>
+            <form action="{{url_for('editService', provider_id=provider_id,
+                            service_id=3, idItem=1)}}" method = 'POST'>
+              <p>choose another governorate:</p>
+              <div class="container container-fluid responsive">
+                <select name="governorate">
+                {% for i in governorate %}
+                <option value={{i.address}}>{{i.address}}</option>
+                {% endfor %}
+                </select>
+                </br>
               </br>
-            </br>
-            <button type="button" class="btn btn-secondary pull-left">
-            <input type='submit' value='Edit'>
-            </button>
-          </div>
-          </form>
-          {% endif %}
+              <button type="button" class="btn btn-secondary pull-left">
+              <input type='submit' value='Edit'>
+              </button>
+            </div>
+            </form>
 
+          {% elif service_id == 4 %}
+            <form action="{{url_for('editService', provider_id=provider_id,
+                            service_id=4, idItem=1)}}" method = 'POST'>
+              <p>choose another governorate:</p>
+              <div class="container container-fluid responsive">
+                <select name="area">
+                {% for i in area %}
+                <option value={{i.address}}>{{i.address}}</option>
+                {% endfor %}
+                </select>
+                </br>
+              </br>
+              <button type="button" class="btn btn-secondary pull-left">
+              <input type='submit' value='Edit'>
+              </button>
+            </div>
+            </form>
+          {% endif %}
 			</div>
 </body>
 </html>

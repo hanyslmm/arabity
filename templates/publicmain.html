@@ -65,7 +65,6 @@
 <body>
 
 	<nav class="container navbar navbar-default">
-
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
 					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
@@ -74,43 +73,37 @@
           <h1>Arabity</h1>
 					<h3>Car Service Provider Application</h3>
 					<p>Repairing What Your Husband Fixed.</p>
-					<p>
 						<!--  message flashing -->
 						{% with messages = get_flashed_messages() %}
 						{% if messages %}
 						<ul>
 							{% for message in messages %}
-								<li>
-									<strong>{{message}}</strong>
-								</li>
+							<li>
+								<strong>{{message}}</strong>
+							</li>
 							{% endfor %}
 						</ul>
 						{% endif %}
 						{% endwith %}
 					</p>
-
 				</div>
 				</div>
-
 			<div class="row">
 				<div class="col-md-6 btn-group text-center" role="group">
 					<button type="button" class="btn btn-secondary pull-left">
 						<a href='{{url_for('newProvider')}}'>Create new provider</a>
 					</button>
-
 				</div>
         <div class="col-md-3 btn-group text-center" role="group">
           <button type="button" class="btn btn-secondary pull-left">
             <a href='{{url_for('providerName')}}'>Main Page</a>
           </button>
-
         </div>
         <div class="col-md-3 btn-group text-center" role="group">
-          <body>
+        <body>
 
   <h2>Search</h2>
   <p>Click on the button to search with Governorate</p>
-
   <div class="dropdown">
     <button onclick="myFunction()" class="dropbtn">Governorate</button>
     <div id="myDropdown" class="dropdown-content">
