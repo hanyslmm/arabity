@@ -80,7 +80,7 @@ class Telephone(db.Model):
 class ProviderAdd(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'), nullable=False)
-    address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
+    address_id = db.Column(db.Integer, nullable=False)
     gov_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
     providers = db.relationship('Provider', backref='providerAdd')
 
@@ -91,6 +91,8 @@ class Address(db.Model):
     address = db.Column(db.String(80), nullable=False)
     parent_id = db.Column(db.Integer, nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('add_type.id'), nullable=False)
+    # DEFINE relationship with provider_add table
+    provAdd = db.relationship('ProviderAdd', backref='address')
 
 # ADD AddType class definition code for add_type table
 class AddType(db.Model):
