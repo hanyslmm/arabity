@@ -4,9 +4,12 @@
   <title>Main</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href=
+        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src=
+  "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<style>
 .dropbtn {
   background-color: #4CAF50;
@@ -67,7 +70,8 @@
 	<nav class="container navbar navbar-default">
 			<div class="row jumbotron text-center" >
 				<div class="col-sm-2">
-					<img src="/static/arabity.png" class="title-logo img-fluid img-responsive" height="150" width="150"/>
+					<img src="/static/arabity.png" class=
+                "title-logo img-fluid img-responsive" height="150" width="150"/>
 				</div>
 				<div class="col-sm-10">
           <h1>Arabity</h1>
@@ -101,18 +105,35 @@
         </div>
         <div class="col-md-3 btn-group text-center" role="group">
         <body>
-
+{% if provider.items %}
   <h2>Search</h2>
   <p>Click on the button to search with Governorate</p>
   <div class="dropdown">
     <button onclick="myFunction()" class="dropbtn">Governorate</button>
     <div id="myDropdown" class="dropdown-content">
-      <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+      <input type="text" placeholder="Search.." id="myInput"
+                                                    onkeyup="filterFunction()">
       {% for i in governorate %}
-      <a href='{{url_for('providerFilter', filterGov=i.address)}}'>{{i.address}}</a>
+      <a href="{{url_for('providerFilter', filterGov=i.address, page_num=1)}}">
+                  {{i.address}}</a>
       {% endfor %}
     </div>
   </div>
+{% else %}
+<h2>Search</h2>
+<p>Click on the button to search with Governorate</p>
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Governorate</button>
+  <div id="myDropdown" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput"
+                                                  onkeyup="filterFunction()">
+    {% for i in governorate %}
+    <a href="{{url_for('providerFilter', filterGov=i.address, page_num=1)}}">
+                  {{i.address}}</a>
+    {% endfor %}
+  </div>
+{% endif %}
+</div>
 
   <script>
   /* When the user clicks on the button,
@@ -153,20 +174,23 @@
 			</div>
 
 	</nav>
-
+  {% if provider.items %}
   <div class="container">
 		{% for i in provider.items %}
-		<div class="col-md-3 pill-center" style="padding: 20px; border: 3px solid #ccc">
+		<div class="col-md-3 pill-center" style="padding: 20px;
+                                                        border: 3px solid #ccc">
       <div class="col-md-6">
         <p><strong>{{i.id}}</strong></p>
         <p><strong>{{i.name}}</strong></p>
       </div>
       <div class="col-md-6">
-        <img src={{i.logo}} class="title-logo img-fluid img-responsive" height="150" width="150"/>
+        <img src={{i.logo}} class="title-logo img-fluid img-responsive"
+                                                      height="150" width="150"/>
       </div>
 				</br>
 				<button type="button" class="btn btn-xs pull-left">
-				<a href='{{url_for('providerService', provider_id=i.id, creator=i.user_id) }}'>Go to service</a>
+				<a href='{{url_for('providerService', provider_id=i.id,
+                                        creator=i.user_id) }}'>Go to service</a>
 				</button>
 				</br>
 		</div>
@@ -174,8 +198,8 @@
 	</div>
 
   <div class="row jumbotron text-center">
-    <h3> Total number of pages {{ provider.pages }} </h3>
-    <h3> Current page number {{ provider.page }} </h3>
+    <h4> Number of pages {{ provider.pages }} </h4>
+    <h4> Current page {{ provider.page }} </h4>
     <a href="{{url_for('providerName', page_num=provider.prev_num)}}">previous page</a>
   {% for page in provider.iter_pages(left_edge=3, right_edge=3) %}
     {% if page %}
@@ -184,17 +208,61 @@
       ...
     {% endif %}
   {% endfor %}
-  <a href="{{url_for('providerName', page_num=provider.next_num)}}">next page</a>
-</div>
+      <a href="{{url_for('providerName', page_num=provider.next_num)}}">next page</a>
+      </div>
+      </br>
 
-</br>
+
+  {% else %}
+  <div class="container">
+    {% for i in provider %}
+    <div class="col-md-3 pill-center" style="padding: 20px; border: 3px solid #ccc">
+      <div class="col-md-6">
+        <p><strong>{{i.id}}</strong></p>
+        <p><strong>{{i.name}}</strong></p>
+      </div>
+      <div class="col-md-6">
+        <img src={{i.logo}} class="title-logo img-fluid img-responsive"
+                                                      height="150" width="150"/>
+      </div>
+        </br>
+        <button type="button" class="btn btn-xs pull-left">
+        <a href='{{url_for('providerService', provider_id=i.id,
+                                        creator=i.user_id) }}'>Go to service</a>
+        </button>
+        </br>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="row jumbotron text-center">
+    <h4> Number of pages {{ provider.pages }} </h4>
+    <h4> Current page {{ provider.page }} </h4>
+    <a href="{{url_for('providerFilter',
+    filterGov=filterGov, page_num=providersId.prev_num)}}">previous page</a>
+  {% for page in providersId.iter_pages(left_edge=3, right_edge=3) %}
+    {% if page %}
+    <a href="{{url_for('providerFilter', filterGov=filterGov, page_num=page)}}">
+                                                                  {{ page }}</a>
+    {% else %}
+      ...
+    {% endif %}
+  {% endfor %}
+  <a href="{{url_for('providerFilter', filterGov=filterGov,
+                                page_num=providersId.next_num)}}">next page</a>
+      </div>
+      </br>
+  {% endif %}
 </br>
   <div class="row" style="padding: 20px; border: 3px solid #ccc">
     <blockquote>
       <footer>Made by: Arabity</footer>
       <h4>Keeping You And Your Family Safe.</h4>
-      <h5>Millions of people own cars, and they will inevitably need repairs or maintenance at some point in time. This type of company gives you great return ccustomers as well as a good rate of new customers.
-            A good slogan for you car service business is a great key to success..</h5>
+      <h5>Millions of people own cars, and they will inevitably
+        need repairs or maintenance at some point in time. This type of company
+        gives you great return ccustomers as well as a good rate
+        of new customers. A good slogan for you car service business
+                                                is a great key to success..</h5>
     </blockquote>
   </div>
 </br>
