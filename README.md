@@ -1,5 +1,9 @@
 # Resources:
 
+## Jinja2 Templating Engine Tutorial:
+
+https://www.youtube.com/watch?v=bxhXQG1qJPM
+
 ## Pagination in SQLALchemy-Flask:
 
 http://flask-sqlalchemy.pocoo.org/2.1/api/#flask.ext.sqlalchemy.SQLAlchemy
