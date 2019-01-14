@@ -213,7 +213,7 @@ def gdisconnect():
 @app.route('/provider/<int:page_num>')
 def providerName(page_num=1):
     # construct a pagination object for all provider
-    provider = Provider.query.order_by(Provider.name.desc()).paginate(per_page=12, page=page_num,\
+    provider = Provider.query.paginate(per_page=12, page=page_num,\
                                         error_out=True)
     governorate = Address.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
