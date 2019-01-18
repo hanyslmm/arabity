@@ -1,0 +1,25 @@
+<div class="col-md-3 pill-center" style="padding: 20px;
+                                                border: 3px solid #ccc">
+<div class="col-md-6">
+  <p><strong>{{i.id}}</strong></p>
+  <p><strong>{{i.name}}</strong></p>
+</div>
+<div class="col-md-6">
+  <img src={{i.logo}} class="title-logo img-fluid img-responsive"
+                                                height="150" width="150"/>
+</div>
+  </br>
+  <button type="button" class="btn btn-xs pull-left">
+  <a href='{{url_for('providerService', provider_id=i.id,
+                                  creator=i.user_id) }}'>Go to service</a>
+  </button>
+  {% if 'username' in session %}
+    </br>
+    <button type="button" class="btn btn-xs pull-right">
+    <a href='{{url_for('providerDelete', provider_id = i.id,
+                              creator = i.user_id) }}'>Delete provider</a>
+    </button>
+  {% endif %}
+  </br>
+  </br>
+</div>
