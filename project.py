@@ -18,6 +18,8 @@ import httplib2
 import json
 from flask import make_response
 import requests  # to use args.get function
+# IMPORT flask dance for OAuth providers.
+from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
 
 
 CLIENT_ID = json.loads(
@@ -28,6 +30,17 @@ APPLICATION_NAME = "arabity"
 app = Flask(__name__)
 db.init_app(app)
 
+# OAUTH with flask dance
+app.config['SECRET_KEY'] = 'hanyslmm'
+facebook_blueprint = make_facebook_blueprint(client_id='629324824153313',\
+                                client_secret='28cb25d78d8c154925ac153fd52d8203')
+app.register_blueprint(facebook_blueprint, url_prefix='/facebook_login')
+
+@app.route('/facebook')
+def facebook_login():
+    if not facebook.authorized:
+        return redirect(url_for('facebook.login'))
+    return ("hablo")
 # === let program know which database engine we want to communicate===
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
@@ -67,6 +80,18 @@ def showLogin():
     print(state)
     login_session['state'] = state
     return render_template('login.html', STATE=state)
+
+
+# CALL back for facebook login
+@app.route('/fbcallback', methods=['POST'])
+def fbcallback():
+    # Validate state token
+    if request.args.get('state') != login_session['state']:
+        response = make_response(json.dumps('Invalid state parameter.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+
 
 
 @app.route('/callback', methods=['POST'])
