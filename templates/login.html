@@ -17,8 +17,29 @@
 </head>
 <body>
 
-<div clas="container">
-  <div class="row ">
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '629324824153313',
+        xfbml      : true,
+        version    : 'v3.2'
+      });
+      FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+<div class="fb-login-button" data-size="medium" data-button-type="continue_with"
+          data-auto-logout-link="false" data-use-continue-as="true"></div>
+</div>
+
     <!-- GOOGLE PLUS SIGN IN-->
     <div class="card card-inverse" style="background-color; border-color: #333;">
       <h3 class="card-title">Login with Google</h3>
