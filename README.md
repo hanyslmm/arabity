@@ -1,3 +1,34 @@
+# About
+This project for Arabity startup, which consists of developing an application that provides a list of car service providers within a variety of categories, as well as provide a user registration and authentication system. This project uses persistent data storage to create a RESTful web application that allows users to perform Create, Read, Update, and Delete operations.
+
+A user does not need to be logged in in order to read the categories or items uploaded. However, users who created an item are the only users allowed to update or delete the item that they created.
+
+This application uses third-party auth with Google or Facebook. Some of the technologies used to build this application include Flask, Bootsrap, Jinja2, and SQLite.
+
+# Skills used for this project:
+
+Python
+
+HTML
+
+CSS
+
+Bootstrap
+
+Flask
+
+Jinja2
+
+SQLAchemy
+
+OAuth
+
+Facebook / Google Login
+
+# Getting Started:
+
+Instruction will added soon..
+
 # Resources:
 
 ## Jinja2 Templating Engine Tutorial:
