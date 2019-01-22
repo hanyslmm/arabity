@@ -41,6 +41,7 @@ while i_row < row_counter:
     prov_tel = sheet.loc[sheet.index[i_row], 'Telephone']
     prov_user = sheet.loc[sheet.index[i_row], 'User']
     prov_area = sheet.loc[sheet.index[i_row], 'Area']
+    prov_brand = sheet.loc[sheet.index[i_row], 'Brand']
     prov_mob = int(prov_mob)
     prov_tel = int(prov_tel)
     prov_user = int(prov_user)
@@ -68,7 +69,7 @@ while i_row < row_counter:
         telephone = Telephone(tel=prov_tel, provider=newprovider)
         db.session.add(telephone)
         db.session.commit()
-    #-----------#
+        # SEARCH for gov address in address table
         gov_address = Address.query.filter_by(parent_id=0,\
                                             address=prov_gov).scalar()
         if gov_address is None:
@@ -76,6 +77,7 @@ while i_row < row_counter:
             gov_address = Address(address=prov_gov, parent_id=0, type_id=2)
             db.session.add(gov_address)
             db.session.commit()
+
         # SEARCH for area address in address table
         area_address = Address.query.filter_by(address=prov_area).scalar()
         if area_address is None:
@@ -86,11 +88,23 @@ while i_row < row_counter:
                                         type_id=3)
             db.session.add(area_address)
             db.session.commit()
-            # ASSIGN address to provider_id in provider_add table
-            print ("hablooooooooooooooooooooooo")
+
+        # SEARCH for brand name in brand table
+        brandName = Brand.query.filter_by(parent_id=0,\
+                                            brand=prov_brand).scalar()
+        if brandName is None:
+            brandName = Brand(parent_id=0, brand=prov_brand, type_id=2)
+            db.session.add(brandName)
+            db.session.commit()
+        # ADD new relation between brand and provider
+        brandName.providers.append(newprovider)
+        db.session.commit()
+        # GIT id number of provider, gov, area
+        print ("getting id numbers of {}".format(newprovider.name))
         prov_id = newprovider.id
         area_id = area_address.id
         gov_id = gov_address.id
+
         prov_address = ProviderAdd.query.filter_by(provider_id=prov_id).scalar()
         if prov_address is None:
             prov_address = ProviderAdd(provider=newprovider,\
@@ -103,11 +117,12 @@ while i_row < row_counter:
             prov_address.gov_id = gov_id
             db.session.add(prov_address)
             db.session.commit()
+
+
     else:
-        print ("provider name {} already exist".format(prov_exist))
+        print ("provider name {} already exist".format(prov_exist.name))
     i_row += 1
 
-db.session.commit()
 print ("done!!!!")
 
 
