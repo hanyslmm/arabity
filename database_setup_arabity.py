@@ -58,7 +58,7 @@ class Provider(db.Model):
     address = db.relationship('ProviderAdd', cascade="all,delete", backref='provider')
     # DEFINE relationship with provider_brand table many to many
     brands = db.relationship('Brand', secondary=provider_brand,\
-                                backref=db.backref('brands', lazy='dynamic'))
+                                backref=db.backref('providers', lazy='dynamic'))
     # DELETE all orphans incase deleting any provider
 
 
