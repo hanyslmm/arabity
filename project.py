@@ -241,12 +241,13 @@ def providerName(page_num=1):
     provider = Provider.query.paginate(per_page=12, page=page_num,\
                                         error_out=True)
     governorate = Address.query.filter_by(parent_id=0).all()
+    brands = Brand.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return render_template('publicmain.html', provider=provider,\
-                                governorate=governorate)
+                                governorate=governorate, brands=brands)
     else:
         return render_template('main.html', provider=provider,\
-                                governorate=governorate)
+                                governorate=governorate, brands=brands)
 
 
 # FILTER provider by governorate
@@ -387,8 +388,10 @@ def newProvider():
 @app.route('/provider/<int:provider_id>/')
 def providerService(provider_id):
     provider = Provider.query.filter_by(id=provider_id).one()
-    story = Story.query.filter_by(provider_id=provider.id).all()
+    story = provider.stories
     creator = getUserInfo(provider.user_id)
+    # GET provider brand from provider_brand table
+    provBrand = ProviderBrand.query.filter_by(provider_id=provider.id).one()
     # GET provider add from provider_add table
     provadd = ProviderAdd.query.filter_by(provider_id=provider.id).one()
     print (provadd.provider_id)
@@ -411,10 +414,12 @@ def providerService(provider_id):
 
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
-                                story=story, creator=creator, addDic=addDic)
+                                story=story, creator=creator, addDic=addDic,\
+                                brand=brand)
     else:
         return render_template('service.html', provider=provider,
-                                story=story, creator=creator, addDic=addDic)
+                                story=story, creator=creator, addDic=addDic,\
+                                brand=brand)
 
 
 # 5: Create route for newServiceItem Function

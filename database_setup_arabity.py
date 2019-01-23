@@ -34,11 +34,12 @@ class User(db.Model):
                             nullable=False)
 
 
-provider_brand = db.Table('provider_brand',\
-                db.Column('provider_id', db.Integer,\
-                db.ForeignKey('provider.id')),\
-                db.Column('brand_id', db.Integer, db.ForeignKey('brand.id'))
-                            )
+# PROVIDER Brand table mapper
+class ProviderBrand(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'))
+    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id'))
+
 
 # PROVIDER table mapper
 class Provider(db.Model):
