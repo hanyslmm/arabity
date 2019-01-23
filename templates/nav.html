@@ -23,24 +23,31 @@
         {% endif %}
         {% endwith %}
       </p>
-
     </div>
     </div>
 
 <div class="row">
-  <div class="col-md-6 btn-group text-center" role="group">
+  <div class="col-md-4 btn-group text-center" role="group">
     <button type="button" class="btn btn-secondary pull-left">
       <a href='{{url_for('newProvider')}}'>Create new provider</a>
     </button>
 
   </div>
-  <div class="col-md-3 btn-group text-center" role="group">
+  <div class="col-md-4 btn-group text-center" role="group">
     <button type="button" class="btn btn-secondary pull-left">
       <a href='{{url_for('providerName')}}'>Main Page</a>
     </button>
-
   </div>
-  <div class="col-md-3 btn-group text-center" role="group">
+  <div class="col-md-4 btn-group text-center" role="group">
+    <button type="button" class="btn btn-secondary pull-right">
+      {% if 'username' not in session %}
+      <a  href="{{url_for('showLogin')}}">Click Here to login</a>
+      {% else %}
+      <a  href="{{url_for('gdisconnect')}}">Disconnect</a>
+      {% endif %}
+    </button>
+  </div></div>
+<div class="row">
 
 {% if provider.items %}
   <h2>Search</h2>
@@ -95,15 +102,8 @@ function filterFunction() {
   }
 }
 </script>
-      <div class="col-md-3 btn-group text-center" role="group">
-        <button type="button" class="btn btn-secondary pull-right">
-          {% if 'username' not in session %}
-          <a  href="{{url_for('showLogin')}}">Click Here to login</a>
-          {% else %}
-          <a  href="{{url_for('gdisconnect')}}">Disconnect</a>
-          {% endif %}
-        </button>
-      </div>
-    </div>
+
+  </div>
+</div>
 
 </nav>
