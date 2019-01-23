@@ -27,7 +27,10 @@ Facebook / Google Login
 
 # Getting Started:
 
-Instruction will added soon..
+Complete Instruction will added soon..
+
+first run brandtype.py and addtype.py using python3
+
 
 # Resources:
 
