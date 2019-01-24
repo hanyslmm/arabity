@@ -35,10 +35,9 @@ class User(db.Model):
 
 
 # PROVIDER Brand table mapper
-class ProviderBrand(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'))
-    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id'))
+prov_brand = db.Table('prov_brand',
+            db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
+            db.Column('brand_id',db.Integer, db.ForeignKey('brand.id')))
 
 
 # PROVIDER table mapper
@@ -47,20 +46,24 @@ class Provider(db.Model):
     name = db.Column(db.String(20), nullable=False)
     logo = db.Column(db.String(250), nullable=False)
     username = db.Column(db.String(20))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),\
-                            nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # DEFINE relationship with mobile table
-    mobiles = db.relationship('Mobile', cascade="all,delete", backref='provider')
+    mobiles = db.relationship('Mobile', cascade="all,delete",\
+                                                            backref='provider')
     # DEFINE relationship with telephone table
-    telephones = db.relationship('Telephone', cascade="all,delete", backref='provider')
+    telephones = db.relationship('Telephone', cascade="all,delete",\
+                                                            backref='provider')
     # DEFINE relationship with story table
     stories = db.relationship('Story', cascade="all,delete", backref='provider')
     # DEFINE relationship with provider_add table
-    address = db.relationship('ProviderAdd', cascade="all,delete", backref='provider')
+    address = db.relationship('ProviderAdd', cascade="all,delete",\
+                                                            backref='provider')
     # DEFINE relationship with provider_brand table many to many
-    brands = db.relationship('Brand', secondary=provider_brand,\
-                                backref=db.backref('providers', lazy='dynamic'))
+    branding = db.relationship('Brand', secondary="prov_brand", \
+                                backref=db.backref('brands', lazy='dynamic'))
     # DELETE all orphans incase deleting any provider
+
+
 
 
 # Mobile class definition code one to many
@@ -107,14 +110,7 @@ class Brand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     brand = db.Column(db.String(20), nullable=False)
     parent_id = db.Column(db.Integer, nullable=False)
-    type_id = db.Column(db.Integer, db.ForeignKey('brand_type.id'), nullable=False)
-
-
-# ADD BrandType class definition code for brand_type table
-class BrandType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    brands = db.relationship('Brand', backref='brandtype')
+    #type_id = db.Column(db.Integer, db.ForeignKey('brand_type.id'), nullable=False)
 
 
 # Story class definition code
@@ -228,7 +224,7 @@ print("connected to arabity database")
 
 if __name__ == '__main__':
     # fill user_type table with Admin and Normal
-    type = UserType.query.filter_by(name='normal').first()
+    type = UserType.query.filter_by(name='normal').scalar()
     if type is None:
         normal = UserType(name='normal')
         db.session.add(normal)
