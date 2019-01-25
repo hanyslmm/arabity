@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arabity.db'
 db = SQLAlchemy(app)
 
 # READ csv file create DataFrame df
-df = pd.read_csv('/Users/macbookpro/projects/arabity/addtype.csv')
+df = pd.read_csv('/Users/macbookpro/projects/arabity/sheets/addtype.csv')
 # CREATE variable counter count all rows in the csv
 row_counter = df.shape[0]
 row_counter = int(row_counter)

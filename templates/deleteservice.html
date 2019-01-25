@@ -45,7 +45,7 @@
 			<div class="row">
         <div class="col-md-6 btn-group text-center" role="group">
           <button type="button" class="btn btn-secondary pull-left">
-            <a href= '{{url_for('providerService', provider_id= item.provider_id)}}'>Cancel</a>
+            <a href= '{{url_for('providerService', provider_id=provider_id)}}'>Cancel</a>
           </button>
         </div>
 				<div class="col-md-3 btn-group text-center" role="group">
@@ -78,8 +78,16 @@
           </form>
           {% elif service_id == 2 %}
           <form action="{{url_for('deleteService', provider_id=provider_id,
-                          service_id=1, idItem=item.id )}}" method = 'POST'>
-            <h2>are you sure you want to delete "{{item.tel}}" </h2>
+                          service_id=2, idItem=item.id )}}" method = 'POST'>
+            <h2>hablooooooooooooooooooooooo"{{item.tel}}" </h2>
+            <button type="button" class="btn btn-secondary pull-left">
+            <input type='submit' value='Delete'>
+            </button>
+          </form>
+          {% elif service_id == 3 %}
+          <form action="{{url_for('deleteService', provider_id=provider_id,
+                          service_id=3, idItem=item.id )}}" method = 'POST'>
+            <h2>are you sure you want to remove "{{item.brand}}"</h2>
             <button type="button" class="btn btn-secondary pull-left">
             <input type='submit' value='Delete'>
             </button>

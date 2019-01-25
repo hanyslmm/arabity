@@ -28,29 +28,35 @@ row_counter = sheet.shape[0]
 row_counter = int(row_counter)
 # col_counter = sheet.shape[1]
 # col_counter = int(col_counter)
+print (sheet)
+i_row = 0
+prov_name = sheet.loc[sheet.index[i_row], 'Name']
+print(prov_name)
 i_row = 0
 while i_row < row_counter:
     prov_name = sheet.loc[sheet.index[i_row], 'Name']
-    prov_gov = sheet.loc[sheet.index[i_row], 'Gov']
-    prov_logo = sheet.loc[sheet.index[i_row], 'Logo']
-    prov_mob = sheet.loc[sheet.index[i_row], 'Mobile']
-    prov_tel = sheet.loc[sheet.index[i_row], 'Telephone']
-    prov_user = sheet.loc[sheet.index[i_row], 'User']
-    prov_area = sheet.loc[sheet.index[i_row], 'Area']
-    prov_brand = sheet.loc[sheet.index[i_row], 'Brand']
-    prov_service = sheet.loc[sheet.index[i_row], 'Service']
-    prov_dayOff = sheet.loc[sheet.index[i_row], 'DayOff']
-    prov_OpenH = sheet.loc[sheet.index[i_row], 'OpenH']
+    #prov_gov = sheet.loc[sheet.index[i_row], 'Gov']
+    #prov_logo = sheet.loc[sheet.index[i_row], 'Logo']
+    #prov_mob = sheet.loc[sheet.index[i_row], 'Mobile']
+    #prov_tel = sheet.loc[sheet.index[i_row], 'Telephone']
+    #prov_user = sheet.loc[sheet.index[i_row], 'User']
+    #prov_area = sheet.loc[sheet.index[i_row], 'Area']
+    #prov_brand = sheet.loc[sheet.index[i_row], 'Brand']
+    #prov_service = sheet.loc[sheet.index[i_row], 'Service']
+    #prov_dayOff = sheet.loc[sheet.index[i_row], 'DayOff']
+    #prov_OpenH = sheet.loc[sheet.index[i_row], 'OpenH']
     prov_CloseH = sheet.loc[sheet.index[i_row], 'CloseH']
-    prov_mob = int(prov_mob)
-    prov_tel = int(prov_tel)
-    prov_user = int(prov_user)
-    prov_username = prov_name + str(random.randint(1,10000))
+    #prov_mob = int(prov_mob)
+    #prov_tel = int(prov_tel)
+    #prov_user = int(prov_user)
+    #prov_username = prov_name + str(random.randint(1,10000))
     # REMOVE last . in gov name and add to database
-    prov_gov = str(prov_gov)
-    prov_gov = list(prov_gov)
-    prov_gov = prov_gov[:-1]
-    prov_gov = "".join(prov_gov)
+    #prov_gov = str(prov_gov)
+    #prov_gov = list(prov_gov)
+    #prov_gov = prov_gov[:-1]
+    #prov_gov = "".join(prov_gov)
+    #print (prov_gov)
+    #print (prov_dayOff)
     prov_exist = Provider.query.filter_by(username=prov_username).scalar()
     if prov_exist is None:
         # ADD new provider with name and logo
@@ -104,6 +110,7 @@ while i_row < row_counter:
 
         # SEARCH for dayOff name in day table
         prov_dayOff_list = prov_dayOff.split()
+        print (prov_dayOff_list)
         for i in prov_dayOff_list:
             dayOff = Day.query.filter_by(days=i).scalar()
             if dayOff is None:
@@ -150,7 +157,7 @@ while i_row < row_counter:
 
 
         # GIT id number of provider, gov, area
-        print ("########")
+        print ("getting id numbers of {}".format(newprovider.name))
         prov_id = newprovider.id
         area_id = area_address.id
         gov_id = gov_address.id

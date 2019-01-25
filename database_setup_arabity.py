@@ -33,11 +33,32 @@ class User(db.Model):
     user_type = db.Column(db.Integer, db.ForeignKey('user_type.id'),\
                             nullable=False)
 
+# PROVIDER service table mapper
+prov_service = db.Table('prov_service',
+            db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
+            db.Column('service_id',db.Integer, db.ForeignKey('service.id')))
+
 
 # PROVIDER Brand table mapper
 prov_brand = db.Table('prov_brand',
             db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
             db.Column('brand_id',db.Integer, db.ForeignKey('brand.id')))
+
+
+# PROVIDER daysOff table mapper
+prov_dayOff = db.Table('prov_dayOff',
+            db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
+            db.Column('dayOff_id',db.Integer, db.ForeignKey('day.id')))
+
+# PROVIDER openH table mapper
+prov_openH = db.Table('prov_openH',
+            db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
+            db.Column('hour_id',db.Integer, db.ForeignKey('hour.id')))
+
+# PROVIDER closeH table mapper
+prov_closeH = db.Table('prov_closeH',
+            db.Column('provider_id',db.Integer, db.ForeignKey('provider.id')),
+            db.Column('hour_id',db.Integer, db.ForeignKey('hour.id')))
 
 
 # PROVIDER table mapper
@@ -59,9 +80,21 @@ class Provider(db.Model):
     address = db.relationship('ProviderAdd', cascade="all,delete",\
                                                             backref='provider')
     # DEFINE relationship with provider_brand table many to many
-    branding = db.relationship('Brand', secondary="prov_brand", \
-                                backref=db.backref('brands', lazy='dynamic'))
+    brands = db.relationship('Brand', secondary="prov_brand", \
+                                backref=db.backref('provider', lazy='dynamic'))
     # DELETE all orphans incase deleting any provider
+    # DEFINE relationship with provider_service table many to many
+    services = db.relationship('Service', secondary="prov_service", \
+                                backref=db.backref('provider', lazy='dynamic'))
+    # DEFINE relationship with provider_daysOff table many to many
+    daysOff = db.relationship('Day', secondary="prov_dayOff", \
+                                backref=db.backref('provider', lazy='dynamic'))
+    # DEFINE relationship with provider_openH table many to many
+    openH = db.relationship('Hour', secondary="prov_openH", \
+                                backref=db.backref('providerOpen', lazy='dynamic'))
+    closeH = db.relationship('Hour', secondary="prov_closeH", \
+                                backref=db.backref('providerClose', lazy='dynamic'))
+
 
 
 
@@ -110,7 +143,44 @@ class Brand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     brand = db.Column(db.String(20), nullable=False)
     parent_id = db.Column(db.Integer, nullable=False)
-    #type_id = db.Column(db.Integer, db.ForeignKey('brand_type.id'), nullable=False)
+    type_id = db.Column(db.Integer, db.ForeignKey('brand_type.id'), nullable=False)
+    # DEFINE relationship with provider table many to many
+    providers = db.relationship('Provider', secondary="prov_brand", \
+                                backref=db.backref('providerBrand', lazy='dynamic'))
+
+
+# Service class definition code
+class Service(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    serviceType = db.Column(db.String(20), nullable=False)
+    # DEFINE relationship with provider table many to many
+    providers = db.relationship('Provider', secondary="prov_service", \
+                                backref=db.backref('providerService', lazy='dynamic'))
+
+
+# Service class definition code
+class Day(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    days = db.Column(db.String(20), nullable=False)
+    # DEFINE relationship with provider table many to many
+    providers = db.relationship('Provider', secondary="prov_dayOff", \
+                                backref=db.backref('providerDay', lazy='dynamic'))
+
+# Service class definition code
+class Hour(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hours = db.Column(db.String(20), nullable=False)
+    # DEFINE relationship with provider table many to many
+    providersOpen = db.relationship('Provider', secondary="prov_openH", \
+                            backref=db.backref('providerOpen', lazy='dynamic'))
+    providersClose = db.relationship('Provider', secondary="prov_closeH", \
+                            backref=db.backref('providerClose', lazy='dynamic'))
+
+# ADD BrandType class definition code for brand_type table
+class BrandType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    brands = db.relationship('Brand', backref='brandType')
 
 
 # Story class definition code

@@ -76,16 +76,12 @@
       <font color="red">City is {{addDic['City']}}</font>
       </div>
       </br>
-      </br>
-      <h3>Brands:</h3>
-      <h2>{{brand}}</h2>
       <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
         <h3>Mobile num:</h3>
         {% for i in provider.mobiles %}
         <p>{{i.mob}}</p>
         {% endfor %}
       </div>
-        </br>
         </br>
       <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
       <h3>Telephone num:</h3>
@@ -95,9 +91,42 @@
       {% endfor %}
       </div>
         </br>
+        <div class="row container-fluid responsive" style="padding: 20px;
+                                                        border: 3px solid #ccc">
+          <h3>Brands:</h3>
+          </br>
+          {% for i in provider.brands %}
+          <p>{{i.brand}}</p>
         </br>
 
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
+          {% endfor %}
+          <h3>Services:</h3>
+          </br>
+          {% for i in provider.services %}
+          <p>{{i.serviceType}}</p>
+
+          {% endfor %}
+          </br>
+          <h3>ايام الاجازة:</h3>
+          </br>
+          {% for i in provider.daysOff %}
+          <p>{{i.days}}</p>
+          {% endfor %}
+          </br>
+          <h3>يبدأ العمل الساعة</h3>
+          {% for i in provider.openH %}
+          <p>{{i.hours}}</p>
+          {% endfor %}
+          </br>
+          <h3>ينتهي العمل الساعة</h3>
+          {% for i in provider.closeH %}
+          <p>{{i.hours}}</p>
+          {% endfor %}
+        </div>
+      </br>
+
+      <div class="row container-fluid responsive" style="padding: 20px;
+                                                        border: 3px solid #ccc">
         <h3>Visitors story:</h3>
         </br>
         {% for i in provider.stories %}
@@ -117,7 +146,6 @@
 						</button>
 					</form>
 			</div>
-    </br>
     </br>
       <p><strong>Provider Added by: {{creator.name}}</strong></p>
       <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">

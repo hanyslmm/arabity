@@ -9,7 +9,6 @@ import string
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from database_setup_arabity import *
-from database_setup_arabity import db
 # google OAuth
 from oauth2client.client import flow_from_clientsecrets  # creates flow object
 from oauth2client.client import FlowExchangeError
@@ -27,7 +26,7 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "arabity"
 
 # initializes an app variable, using the __name__ attribute
-app = Flask(__name__)
+
 db.init_app(app)
 
 # OAUTH with flask dance
@@ -326,6 +325,7 @@ def providerFilter(filterGov, page_num=1):
 @app.route('/provider/<int:provider_id>/delete', methods=['GET', 'POST'])
 def providerDelete(provider_id):
     deletedProvider = Provider.query.filter_by(id=provider_id).one()
+    print(deletedProvider.name)
     # verify that a user is logged in
     if 'username' not in login_session:
         return redirect('/login')
@@ -334,8 +334,16 @@ def providerDelete(provider_id):
         output += " to delete this Provider.');}</script>"
         return output
     if request.method == 'POST':
+        # FIRST remove all many to many relationship
+        deletedProvider.brands.clear()
+        deletedProvider.services.clear()
+        deletedProvider.openH.clear()
+        deletedProvider.closeH.clear()
+        deletedProvider.daysOff.clear()
         db.session.delete(deletedProvider)
         db.session.commit()
+
+
         # using flash to make interaction with user
         flash("{} Provider Deleted!".format("hablo"))
         return redirect(url_for('providerName'))
@@ -390,8 +398,6 @@ def providerService(provider_id):
     provider = Provider.query.filter_by(id=provider_id).one()
     story = provider.stories
     creator = getUserInfo(provider.user_id)
-    # GET provider brand from provider_brand table
-    provBrand = ProviderBrand.query.filter_by(provider_id=provider.id).one()
     # GET provider add from provider_add table
     provadd = ProviderAdd.query.filter_by(provider_id=provider.id).one()
     print (provadd.provider_id)
@@ -414,12 +420,10 @@ def providerService(provider_id):
 
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicservice.html', provider=provider,
-                                story=story, creator=creator, addDic=addDic,\
-                                brand=brand)
+                                story=story, creator=creator, addDic=addDic)
     else:
         return render_template('service.html', provider=provider,
-                                story=story, creator=creator, addDic=addDic,\
-                                brand=brand)
+                                story=story, creator=creator, addDic=addDic)
 
 
 # 5: Create route for newServiceItem Function
@@ -571,11 +575,24 @@ def deleteService(provider_id, service_id, idItem):
             # to make interaction with user
             flash("{} provider number Deleted!")
             return redirect(url_for('providerService', provider_id=provider_id))
-    if service_id == 1:
-        deletedItem = Mobile.query.filter_by(id=idItem).one()
-    if service_id == 2:
-        deletedItem = Telephone.query.filter_by(id=idItem).one()
+        if service_id == 3:
+            print('hablooooooooooooooooooooooo')
+            ProvBrand = Brand.query.filter_by(id=idItem)
+            provider.ProvBrand.remove(ProvBrand)
+            db.session.commit()
+            # to make interaction with user
+            flash("{} provider brand Deleted!".format(ProvBrand.brand))
+            return redirect(url_for('providerService', provider_id=provider_id))
     else:
+        if service_id == 1:
+            deletedItem = Mobile.query.filter_by(id=idItem).one()
+        if service_id == 2:
+            deletedItem = Telephone.query.filter_by(id=idItem).one()
+        if service_id == 3:
+            print ('hablooooooooooooooooooooooo')
+            deletedItem = Brand.query.filter_by(id=idItem).one()
+            print ('zablo')
+            print (deletedItem.brand)
         return render_template('deleteservice.html',
                                    provider_id=provider_id,
                                    service_id=service_id, item=deletedItem)
