@@ -63,105 +63,11 @@
 			</div>
 
 	</nav>
-    <div class="container container-fluid responsive">
-      <div>
-        <h2>{{provider.name}} Provider</h2>
-      </div>
-      <div class="row container-fluid responsive" style="padding: 20px;
-           border: 3px solid #ccc">
-      <h3>Address:</h3>
 
-      <font color="blue">Governorate is {{addDic['Governorate']}}</font>
-      </br>
-      <font color="red">City is {{addDic['City']}}</font>
-      </div>
-      </br>
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
-        <h3>Mobile num:</h3>
-        {% for i in provider.mobiles %}
-        <p>{{i.mob}}</p>
-        {% endfor %}
-      </div>
-        </br>
-      <div class="row container-fluid responsive" style="padding: 20px; border: 3px solid #ccc">
-      <h3>Telephone num:</h3>
-      </br>
-      {% for i in provider.telephones %}
-        <p>{{i.tel}}</p>
-      {% endfor %}
-      </div>
-        </br>
-        <div class="row container-fluid responsive" style="padding: 20px;
-                                                        border: 3px solid #ccc">
-          <h3>Brands:</h3>
-          </br>
-          {% for i in provider.brands %}
-          <p>{{i.brand}}</p>
-        </br>
-
-          {% endfor %}
-          <h3>Services:</h3>
-          </br>
-          {% for i in provider.services %}
-          <p>{{i.serviceType}}</p>
-
-          {% endfor %}
-          </br>
-          <h3>ايام الاجازة:</h3>
-          </br>
-          {% for i in provider.daysOff %}
-          <p>{{i.days}}</p>
-          {% endfor %}
-          </br>
-          <h3>يبدأ العمل الساعة</h3>
-          {% for i in provider.openH %}
-          <p>{{i.hours}}</p>
-          {% endfor %}
-          </br>
-          <h3>ينتهي العمل الساعة</h3>
-          {% for i in provider.closeH %}
-          <p>{{i.hours}}</p>
-          {% endfor %}
-        </div>
-      </br>
-
-      <div class="row container-fluid responsive" style="padding: 20px;
-                                                        border: 3px solid #ccc">
-        <h3>Visitors story:</h3>
-        </br>
-        {% for i in provider.stories %}
-        <p>{{i.post}}</p>
-        <p>Added at: {{i.timestamp}}</p>
-        <p><strong>Added by: {{i.user.name}}</strong></p>
-          </br>
-        {% endfor %}
-      </div>
-      <div class="container container-fluid responsive">
-					<h2> Add New Story to {{provider.name}}  </h2>
-					<form action="{{url_for('newStory',provider_id=provider.id)}}" method = 'POST'>
-						<p>share your experince:</p>
-						  <input type = 'paragraph' size='100' name = 'post' placeholder = 'عملو معاك ايه ؟' required>
-						<button type="button" class="btn btn-secondary pull-left">
-						<input type='submit' value='Create'>
-						</button>
-					</form>
-			</div>
+  {% include 'viewProvider.html' %}
     </br>
-      <p><strong>Provider Added by: {{creator.name}}</strong></p>
-      <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
-        </br>
-  		</div>
-    </br>
-    </br>
-    <div class="row" style="padding: 20px; border: 3px solid #ccc">
-      <blockquote>
-        <footer>Made by: Arabity</footer>
-        <h4>Keeping You And Your Family Safe.</h4>
-        <h5>Millions of people own cars, and they will inevitably need repairs or maintenance at some point in time. This type of company gives you great return ccustomers as well as a good rate of new customers.
-              A good slogan for you car service business is a great key to success.</h5>
-      </blockquote>
-    </div>
-    </br>
-  	</div>
+  </br>
+  {% include 'footer.html' %}
+  </br>
   </body>
 </html>

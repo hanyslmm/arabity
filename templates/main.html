@@ -34,23 +34,26 @@
   {% endfor %}
 </div>
 
+{% if providersId %}
+
 <div class="row jumbotron text-center">
   <h4> Number of pages {{ provider.pages }} </h4>
   <h4> Current page {{ provider.page }} </h4>
-  <a href="{{url_for('providerFilter',
+  <a href="{{url_for('providerFilterG',
   filterGov=filterGov, page_num=providersId.prev_num)}}">previous page</a>
 {% for page in providersId.iter_pages(left_edge=3, right_edge=3) %}
   {% if page %}
-  <a href="{{url_for('providerFilter', filterGov=filterGov, page_num=page)}}">
+  <a href="{{url_for('providerFilterG', filterGov=filterGov, page_num=page)}}">
                                                                 {{ page }}</a>
   {% else %}
     ...
   {% endif %}
 {% endfor %}
-<a href="{{url_for('providerFilter', filterGov=filterGov,
+<a href="{{url_for('providerFilterG', filterGov=filterGov,
                               page_num=providersId.next_num)}}">next page</a>
     </div>
     </br>
+{% endif %}
 {% endif %}
 </br>
 {% include 'footer.html' %}

@@ -240,19 +240,60 @@ def providerName(page_num=1):
     provider = Provider.query.paginate(per_page=12, page=page_num,\
                                         error_out=True)
     governorate = Address.query.filter_by(parent_id=0).all()
-    brands = Brand.query.filter_by(parent_id=0).all()
+    service = Service.query.all()
+    brand = Brand.query.filter_by(parent_id=0).all()
     if 'username' not in login_session:
         return render_template('publicmain.html', provider=provider,\
-                                governorate=governorate, brands=brands)
+            service=service, brand=brand, governorate=governorate)
     else:
         return render_template('main.html', provider=provider,\
-                                governorate=governorate, brands=brands)
+            service=service, brand=brand, governorate=governorate)
+
+
+# FILTER provider by brand
+@app.route('/provider/brand/<string:filterBrand>/')
+@app.route('/provider/brand/<string:filterBrand>/<int:page_num>')
+def providerFilterB(filterBrand, page_num=1):
+    service = Service.query.all()
+    brand = Brand.query.filter_by(parent_id=0).all()
+    governorate = Address.query.filter_by(parent_id=0).all()
+    filterBrandOb = Brand.query.filter_by(parent_id=0, brand=filterBrand).one()
+    provider = filterBrandOb.providers
+    if 'username' not in login_session:
+        return render_template('publicmain.html', provider=provider,\
+            service=service, brand=brand, filterBrand=filterBrand,\
+                                                        governorate=governorate)
+    else:
+        return render_template('main.html', provider=provider,\
+            service=service, brand=brand, filterBrand=filterBrand,\
+                                                        governorate=governorate)
+
+
+# FILTER provider by service
+@app.route('/provider/service/<string:filterService>/')
+@app.route('/provider/service/<string:filterService>/<int:page_num>')
+def providerFilterS(filterService, page_num=1):
+    service = Service.query.all()
+    brand = Brand.query.filter_by(parent_id=0).all()
+    governorate = Address.query.filter_by(parent_id=0).all()
+    filterServiceOb = Service.query.filter_by(serviceType=filterService).one()
+    provider = filterServiceOb.providers
+    if 'username' not in login_session:
+        return render_template('publicmain.html', provider=provider,\
+            service=service, brand=brand, filterService=filterService,\
+                                                        governorate=governorate)
+    else:
+        return render_template('main.html', provider=provider,\
+            service=service, brand=brand, filterService=filterService,\
+                                                        governorate=governorate)
 
 
 # FILTER provider by governorate
 @app.route('/provider/<string:filterGov>/')
 @app.route('/provider/<string:filterGov>/<int:page_num>')
-def providerFilter(filterGov, page_num=1):
+def providerFilterG(filterGov, page_num=1):
+    service = Service.query.all()
+    brand = Brand.query.filter_by(parent_id=0).all()
     governorate = Address.query.filter_by(parent_id=0).all()
     filterGovOb = Address.query.filter_by(parent_id=0, address=filterGov).one()
     providersId = ProviderAdd.query.filter_by(gov_id=filterGovOb.id).\
@@ -264,11 +305,13 @@ def providerFilter(filterGov, page_num=1):
         provider.append(i.provider)
 
     if 'username' not in login_session:
-        return render_template('publicmain.html', provider=provider,filterGov=filterGov,\
-                                governorate=governorate, providersId=providersId,)
+        return render_template('publicmain.html', provider=provider,\
+                service=service, brand=brand, filterGov=filterGov,\
+                            governorate=governorate, providersId=providersId,)
     else:
-        return render_template('main.html', provider=provider,filterGov=filterGov,\
-                                governorate=governorate, providersId=providersId)
+        return render_template('main.html', provider=provider,
+                service=service, brand=brand, filterGov=filterGov,\
+                            governorate=governorate, providersId=providersId)
     """
     paginated = Pagination(query_object, page=page, per_page=10)
     # construct a pagination object for all provider
@@ -492,7 +535,7 @@ def editService(provider_id, service_id, idItem):
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
-        return
+        return\
         "<script>{alert('You are not authorized to edit this');}</script>"
     if request.method == 'POST':
         if service_id == 1:
@@ -540,7 +583,7 @@ def editService(provider_id, service_id, idItem):
     if service_id == 4:
         editedItem = ProviderAdd.query.filter_by(provider=provider).one()
     return render_template(
-            'editserviceitem.html', provider_id=provider.id,
+            'editserviceitem.html', provider_id=provider.id,\
              service_id=service_id, governorate=governorate,\
                                     area=area, item=editedItem)
 
@@ -555,7 +598,7 @@ def deleteService(provider_id, service_id, idItem):
     if 'username' not in login_session:
         return redirect('/login')
     if creator.id != login_session['user_id']:
-        return
+        return \
         "<script>{alert('You are not authorized to delete this');}</script>"
     if request.method == 'POST':
         if service_id == 1:
@@ -564,10 +607,12 @@ def deleteService(provider_id, service_id, idItem):
                 db.session.commit()
                 # to make interaction with user
                 flash("{} provider number Deleted!")
-                return redirect(url_for('providerService', provider_id=provider_id))
+                return redirect(url_for('providerService',\
+                                                    provider_id=provider_id))
             except:
                 flash("{} provider number not found!")
-                return redirect(url_for('providerService', provider_id=provider_id))
+                return redirect(url_for('providerService',\
+                                                    provider_id=provider_id))
 
         if service_id == 2:
             Telephone.query.filter_by(id=idItem).delete()
@@ -593,8 +638,8 @@ def deleteService(provider_id, service_id, idItem):
             deletedItem = Brand.query.filter_by(id=idItem).one()
             print ('zablo')
             print (deletedItem.brand)
-        return render_template('deleteservice.html',
-                                   provider_id=provider_id,
+        return render_template('deleteservice.html',\
+                                   provider_id=provider_id,\
                                    service_id=service_id, item=deletedItem)
 
 

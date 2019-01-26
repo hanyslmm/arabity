@@ -8,6 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<style>
+
 		p.groove {border-style: groove;}
 	</style>
 </head>
@@ -67,145 +68,10 @@
 
 	</nav>
 
-
-    <div class="container container-fluid responsive">
-      <div>
-        <h2>{{provider.name}} Provider</h2>
-      </div>
-      <div class="row container-fluid responsive" style="padding: 20px;
-           border: 3px solid #ccc">
-
-      <h3>Address:</h3>
-      <font color="blue">Governorate is {{addDic['Governorate']}}</font>
-      </br>
-      <font color="red">City is {{addDic['City']}}</font>
-      </br>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('editService', provider_id=provider.id,
-              service_id=3, idItem=1) }}'>Edit Address</a>
-        </button>
-      </br>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('editService', provider_id=provider.id,
-              service_id=4, idItem=1) }}'>Edit City</a>
-        </button>
-      </div>
-      </br>
-      </br>
-
-
-      <div class="row container-fluid responsive" style="padding: 20px;
-           border: 3px solid #ccc">
-       <h3>Mobile num:</h3>
-       </br>
-       {% for i in provider.mobiles %}
-        <p>{{i.mob}}</p>
-        </br>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('editService', provider_id=provider.id,
-              service_id=1, idItem=i.id) }}'>Edit mobile</a>
-        </button>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('deleteService', provider_id = provider.id,
-              service_id = 1, idItem=i.id) }}'>Delete mobile</a>
-        </button>
-        </br></br>
-      {% endfor %}
-      </br>
-      </div>
-      <div class="row container-fluid responsive" style="padding: 20px;
-            border: 3px solid #ccc">
-        <h3>telephone num:</h3>
-        </br>
-        {% for i in provider.telephones %}
-        <p>{{i.tel}}</p>
-      </br>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('editService', provider_id=provider.id,
-             service_id = 2, idItem=i.id) }}'>Edit telephone</a>
-        </button>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('deleteService', provider_id = provider.id,
-              service_id = 2, idItem=i.id) }}'>Delete telephone</a>
-        </button>
-        </br>
-        </br>
-        {% endfor %}
-      </br>
-      </div>
-      <div class="row container-fluid responsive" style="padding: 20px;
-            border: 3px solid #ccc">
-      <h3>Brands:</h3>
-      </br>
-      {% for i in provider.brands %}
-      <p>{{i.brand}}</p>
-      <p>{{i.id}}</p>
-      </br>
-        <button type="button" class="btn btn-xs pull-left">
-          <a href='{{url_for('deleteService', provider_id=provider.id,
-              service_id=3, idItem=i.id) }}'>Delete brand</a>
-        </button>
-      </br>
-      </br>
-      {% endfor %}
-
-      <h3>Services:</h3>
-      </br>
-      {% for i in provider.services %}
-      <p>{{i.serviceType}}</p>
-
-      {% endfor %}
-      </br>
-      <h3>ايام الاجازة:</h3>
-      </br>
-      {% for i in provider.daysOff %}
-      <p>{{i.days}}</p>
-      {% endfor %}
-      </br>
-      <h3>يبدأ العمل الساعة</h3>
-      {% for i in provider.openH %}
-      <p>{{i.hours}}</p>
-      {% endfor %}
-      </br>
-      <h3>ينتهي العمل الساعة</h3>
-      {% for i in provider.closeH %}
-      <p>{{i.hours}}</p>
-      {% endfor %}
-      </div>
-
-      <div class="row container-fluid responsive" style="padding: 20px;
-           border: 3px solid #ccc">
-           <h3>visitors story:</h3>
-           </br>
-           {% for i in story %}
-        <p>{{i.post}}</p>
-        <p>Added at: {{i.timestamp}}</p>
-        <p><strong>Added by: {{i.user.name}}</strong></p>
-          </br>
-            {% endfor %}
-      </div>
+  {% include 'viewProvider.html' %}
     </br>
-    <button type="button" class="btn btn-xs pull-left">
-      <a href='{{url_for('newStory', provider_id=provider.id) }}'>Add your story</a>
-    </button>
   </br>
-    </br>
-      <p><strong>Provider Added by: {{creator.name}}</strong></p>
-      <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
-        </br>
-  		</div>
-    </br>
-    </br>
-    <div class="row" style="padding: 20px; border: 3px solid #ccc">
-      <blockquote>
-        <footer>Made by: Arabity</footer>
-        <h4>Keeping You And Your Family Safe.</h4>
-        <h5>Millions of people own cars, and they will inevitably need repairs or maintenance at some point in time. This type of company gives you great return ccustomers as well as a good rate of new customers.
-              A good slogan for you car service business is a great key to success.</h5>
-      </blockquote>
-    </div>
-    </br>
-  	</div>
-
+  {% include 'footer.html' %}
+  </br>
   </body>
 </html>

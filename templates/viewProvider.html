@@ -1,0 +1,181 @@
+
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">{{provider.name}} at Your Service</h2>
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+                        <h3>Address</h3>
+                        <p class="text-muted"><font color="blue">Governorate is
+                                                {{addDic['Governorate']}}</font>
+                            <br>
+                            <font color="red">City is {{addDic['City']}}
+                            </font></p>
+                            {% if 'username' in session %}
+                            <button type="button">
+                              <a href='{{url_for('editService', provider_id=provider.id,
+                                  service_id=3, idItem=1) }}'>Edit Address</a>
+                            </button>
+
+                            <button type="button">
+                              <a href='{{url_for('editService', provider_id=provider.id,
+                                  service_id=4, idItem=1) }}'>Edit City</a>
+                            </button>
+                            {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-paper-plane text-primary sr-icons"></i>
+                        <h3>Mobile</h3>
+
+                        <p class="text-muted">
+                               {% for i in provider.mobiles %}
+                                <p>{{i.mob}}</p>
+                                <br>
+                                {% if 'username' in session %}
+                                <button type="button">
+                                  <a href='{{url_for('editService', provider_id=provider.id,
+                                      service_id=1, idItem=i.id) }}'>Edit mobile</a>
+                                </button>
+                                <button type="button">
+                                  <a href='{{url_for('deleteService', provider_id = provider.id,
+                                      service_id = 1, idItem=i.id) }}'>Delete mobile</a>
+                                </button>
+                                </br></br>
+                                {% endif %}
+                              {% endfor %}
+                              </br></p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                        <h3>Telephone</h3>
+                      {% for i in provider.telephones %}
+                      <p>{{i.tel}}</p>
+                    </br>
+                    {% if 'username' in session %}
+                      <button type="button">
+                        <a href='{{url_for('editService', provider_id=provider.id,
+                           service_id = 2, idItem=i.id) }}'>Edit telephone</a>
+                      </button>
+                      <button type="button">
+                        <a href='{{url_for('deleteService', provider_id = provider.id,
+                            service_id = 2, idItem=i.id) }}'>Delete telephone</a>
+                      </button>
+                      </br>
+                      </br>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-heart text-primary sr-icons"></i>
+                        <h3>Brands</h3>
+
+                          {% for i in provider.brands %}
+                          <p class="text-muted">
+                              <p>{{i.brand}}</p>
+                            {% if 'username' in session %}
+                                <button type="button">
+                                  <a href='{{url_for('deleteService', provider_id=provider.id,
+                                      service_id=3, idItem=i.id) }}'>Delete</a>
+
+                                </button>
+                            {% endif %}
+                            </br>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="services">
+        <div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box">
+                <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+                <h3>الخدمات المقدمة</h3>
+                <p class="text-muted">
+                  {% for i in provider.services %}
+                    <p>{{i.serviceType}}</p>
+
+                    {% endfor %}
+                    </br>
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box">
+                <i class="fa fa-4x fa-paper-plane text-primary sr-icons"></i>
+                <h3>ايام الاجازة</h3>
+
+                <p class="text-muted border: 3px solid #ccc"">
+                  {% for i in provider.daysOff %}
+                  <p>{{i.days}}</p>
+                  {% endfor %}
+                  </br></p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box">
+                <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                <h3>يبدأ العمل الساعة</h3>
+                <p class="text-muted">
+                  {% for i in provider.openH %}
+                  <p>{{i.hours}}</p>
+                  {% endfor %}
+                  </br>
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center border: 3px solid #ccc"">
+            <div class="service-box">
+                <i class="fa fa-4x fa-heart text-primary sr-icons"></i>
+                <h3>ينتهي العمل الساعة</h3>
+                <p class="text-muted">
+                  {% for i in provider.closeH %}
+                  <p>{{i.hours}}</p>
+                  {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+    <div class="container container-fluid responsive">
+            <div class="row container-fluid responsive" style="padding: 20px;
+           border: 3px solid #ccc">
+           <h3>visitors story:</h3>
+           </br>
+           {% for i in story %}
+        <p>{{i.post}}</p>
+        <p>Added at: {{i.timestamp}}</p>
+        <p><strong>Added by: {{i.user.name}}</strong></p>
+          </br>
+            {% endfor %}
+      </div>
+    </br>
+    <button type="button" class="btn btn-xs pull-left">
+      <a href='{{url_for('newStory', provider_id=provider.id) }}'>Add your story</a>
+    </button>
+  </br>
+    </br>
+      <p><strong>Provider Added by: {{creator.name}}</strong></p>
+      <img src={{creator.picture}} alt="Italian Trulli" height="100" width="100">
+        </br>
+  		</div>
+    </br>
+</div>
+</div>
