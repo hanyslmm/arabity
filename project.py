@@ -231,8 +231,23 @@ def gdisconnect():
         return response
 
 
-# 1 list all service provider name
 @app.route('/')
+def root(page_num=1):
+    return render_template('root.html')
+    # construct a pagination object for all provider
+    provider = Provider.query.paginate(per_page=12, page=page_num,\
+                                        error_out=True)
+    governorate = Address.query.filter_by(parent_id=0).all()
+    service = Service.query.all()
+    brand = Brand.query.filter_by(parent_id=0).all()
+    if 'username' not in login_session:
+        return render_template('publicmain.html', provider=provider,\
+            service=service, brand=brand, governorate=governorate)
+    else:
+        return render_template('main.html', provider=provider,\
+            service=service, brand=brand, governorate=governorate)
+
+# 1 list all service provider name
 @app.route('/provider')
 @app.route('/provider/<int:page_num>')
 def providerName(page_num=1):

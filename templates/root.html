@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+{% include 'header.html' %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="container">
+<body>
+
+
+<!-- Navigation -->
+<nav class="container navbar navbar-default">
+
+  <div class="row jumbotron text-center" >
+    <div class="col-sm-12">
+      <h1>Arabity</h1>
+      <h3>Car Service Provider Application</h3>
+      <p> Repairing What Your Husband Fixed.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 btn-group text-center" role="group">
+      <button type="button" class="btn btn-secondary pull-left">
+        <a href='{{url_for('providerName')}}'>Main Page</a>
+      </button>
+    </div>
+    <div class="col-md-6 btn-group text-center" role="group">
+      <button type="button" class="btn btn-secondary pull-right">
+        {% if 'username' not in session %}
+        <a  href="{{url_for('showLogin')}}">Click Here to login</a>
+        {% else %}
+        <a  href="{{url_for('gdisconnect')}}">Disconnect</a>
+        {% endif %}
+      </button>
+    </div>
+  </div>
+  <div class="row jumbotron center" >
+    <!-- Slide Show -->
+      <img class="mySlides" src="/static/cover1.jpg" style="width:100%">
+      <img class="mySlides" src="/static/cover2.jpg" style="width:100%">
+      <img class="mySlides" src="/static/cover3.jpeg" style="width:100%">
+      <img class="mySlides" src="/static/cover4.jpeg" style="width:100%">
+
+  </div>
+
+    <script>
+    // Automatic Slideshow - change image every 2 seconds
+    var myIndex = 0;
+    carousel();
+
+    function carousel() {
+      var i;
+      var x = document.getElementsByClassName("mySlides");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      myIndex++;
+      if (myIndex > x.length) {myIndex = 1}
+      x[myIndex-1].style.display = "block";
+      setTimeout(carousel, 2000);
+    }
+    </script>
+
+
+  {% include 'footer.html' %}
+
+</body>
+</html>
