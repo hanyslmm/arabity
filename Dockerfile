@@ -11,24 +11,21 @@ RUN apk add --no-cache python3 && \
     rm -r /root/.cache
 
 
-# Install all app dependencies
+ 
+WORKDIR /code/
 
-RUN pip3 install Flask
+# Add requirements and install dependencies 
+ADD ./files/requirements.txt /code/
+RUN pip install -r ./requirements.txt
 
-RUN pip3 install Flask-SQLALchemy
-
-RUN pip3 install oauth2client
-
-RUN pip3 install httplib2
-
-RUN pip3 install requests 
-
-RUN python3 database_setup.py
+WORKDIR /code/src
+COPY database_setup_arabity.py .
 
 # Bundle app source
-
-COPY project.py /src/project.py
-COPY database_setup.py /src/database_setup.py
-COPY templates /src/templates
-CMD ["python3", "/src/database_setup.py"]
-
+RUN mkdir templates
+RUN mkdir static
+COPY project.py .
+COPY templates ./templates
+COPY static ./static
+COPY client_secrets.json .
+COPY arabity.db .
